@@ -1,0 +1,1360 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>旅人市集多媒體導覽平台</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            overflow: hidden;
+            background: #1a1a1a;
+            touch-action: manipulation;
+            user-select: none;
+        }
+
+        .container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+
+        /* 閒置首頁 */
+        .idle-home {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #8B4513 0%, #2E8B57 50%, #FF8C00 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: opacity 0.8s ease;
+        }
+
+        .idle-home.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .background-video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><defs><linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:%238B4513;stop-opacity:1" /><stop offset="50%" style="stop-color:%232E8B57;stop-opacity:1" /><stop offset="100%" style="stop-color:%23FF8C00;stop-opacity:1" /></linearGradient></defs><rect width="100%" height="100%" fill="url(%23bg)"/></svg>') center/cover;
+            opacity: 0.3;
+            animation: breathe 4s ease-in-out infinite alternate;
+        }
+
+        @keyframes breathe {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.05); }
+        }
+
+        .main-logo {
+            font-size: 4rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 1rem;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            0% { text-shadow: 0 4px 20px rgba(255,255,255,0.3); }
+            100% { text-shadow: 0 4px 30px rgba(255,255,255,0.6); }
+        }
+
+        .tagline {
+            font-size: 1.8rem;
+            color: white;
+            margin-bottom: 3rem;
+            text-align: center;
+            opacity: 0.9;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            0% { opacity: 0; transform: translateY(30px); }
+            100% { opacity: 0.9; transform: translateY(0); }
+        }
+
+        .enter-portal {
+            padding: 2rem 4rem;
+            font-size: 1.5rem;
+            font-weight: 500;
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(20px);
+            border: 3px solid rgba(255,255,255,0.3);
+            color: white;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .enter-portal::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            transform: rotate(45deg);
+            transition: all 0.6s ease;
+        }
+
+        .enter-portal:hover::before {
+            transform: rotate(45deg) translate(50%, 50%);
+        }
+
+        .enter-portal:hover {
+            background: rgba(255,255,255,0.25);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .lang-selector {
+            position: absolute;
+            top: 40px;
+            right: 40px;
+            display: flex;
+            gap: 15px;
+        }
+
+        .lang-btn {
+            padding: 15px 25px;
+            background: rgba(255,255,255,0.1);
+            border: 2px solid rgba(255,255,255,0.3);
+            color: white;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .lang-btn.active {
+            background: rgba(255,255,255,0.3);
+            border-color: rgba(255,255,255,0.6);
+        }
+
+        .lang-btn:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-2px);
+        }
+
+        /* 主選單畫面 */
+        .main-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            display: none;
+            flex-direction: column;
+            animation: slideIn 0.6s ease-out;
+        }
+
+        @keyframes slideIn {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(0); }
+        }
+
+        .main-screen.active {
+            display: flex;
+        }
+
+        .header {
+            height: 100px;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 40px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .header-logo {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #8B4513, #2E8B57, #FF8C00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header-controls {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .header-btn {
+            padding: 12px 24px;
+            background: linear-gradient(45deg, #8B4513, #2E8B57);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .header-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .content-area {
+            flex: 1;
+            padding: 40px;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        /* 主選單網格 */
+        .main-menu {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            gap: 30px;
+            max-width: 1400px;
+            margin: 0 auto;
+            height: 100%;
+        }
+
+        .menu-item {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .menu-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .menu-item:hover::before {
+            left: 100%;
+        }
+
+        .menu-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+
+        .menu-item.map-item {
+            grid-column: 1 / -1;
+            grid-row: 1 / 2;
+            background: linear-gradient(135deg, #8B4513 0%, #2E8B57 100%);
+            color: white;
+        }
+
+        .menu-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .menu-item:hover .menu-icon {
+            transform: scale(1.1);
+        }
+
+        .menu-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .map-item .menu-title {
+            color: white;
+        }
+
+        .menu-description {
+            font-size: 1.1rem;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .map-item .menu-description {
+            color: rgba(255,255,255,0.9);
+        }
+
+        /* 內容頁面 */
+        .content-page {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #f8f9fa;
+            display: none;
+            flex-direction: column;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .content-page.active {
+            display: flex;
+        }
+
+        .page-header {
+            height: 120px;
+            background: linear-gradient(135deg, #8B4513 0%, #2E8B57 100%);
+            display: flex;
+            align-items: center;
+            padding: 0 40px;
+            color: white;
+            position: relative;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+
+        .page-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-top: 10px;
+        }
+
+        .page-content {
+            flex: 1;
+            padding: 40px;
+            overflow-y: auto;
+        }
+
+        /* 互動地圖 */
+        .interactive-map {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            position: relative;
+        }
+
+        .map-container {
+            position: relative;
+            width: 800px;
+            height: 600px;
+        }
+
+        .central-hub {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(45deg, #8B4513, #FF8C00);
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            color: white;
+            font-weight: 600;
+            font-size: 1.2rem;
+            text-align: center;
+        }
+
+        .central-hub:hover {
+            transform: translate(-50%, -50%) scale(1.1);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+
+        .satellite-point {
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(45deg, #2E8B57, #20B2AA);
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            color: white;
+            font-weight: 500;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        .satellite-point:hover {
+            transform: scale(1.2);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .satellite-point.point1 { top: 20px; left: 50%; transform: translateX(-50%); }
+        .satellite-point.point2 { top: 50%; right: 20px; transform: translateY(-50%); }
+        .satellite-point.point3 { bottom: 20px; left: 50%; transform: translateX(-50%); }
+        .satellite-point.point4 { top: 50%; left: 20px; transform: translateY(-50%); }
+
+        .connection-line {
+            position: absolute;
+            height: 2px;
+            background: linear-gradient(90deg, #8B4513, #2E8B57);
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        .line1 { width: 200px; top: 120px; left: 50%; transform: translateX(-50%); }
+        .line2 { width: 200px; right: 120px; top: 50%; transform: translateY(-50%); }
+        .line3 { width: 200px; bottom: 120px; left: 50%; transform: translateX(-50%); }
+        .line4 { width: 200px; left: 120px; top: 50%; transform: translateY(-50%); }
+
+        /* 產品網格 */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #f0f0f0, #e0e0e0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: #999;
+        }
+
+        .product-info {
+            padding: 20px;
+        }
+
+        .product-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .product-description {
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+
+        .product-tags {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            padding: 5px 12px;
+            background: linear-gradient(45deg, #8B4513, #2E8B57);
+            color: white;
+            border-radius: 15px;
+            font-size: 0.8rem;
+        }
+
+        /* 據點詳情頁 */
+        .location-detail {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .location-hero {
+            width: 100%;
+            height: 300px;
+            background: linear-gradient(135deg, #8B4513 0%, #2E8B57 100%);
+            border-radius: 20px;
+            margin-bottom: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+            text-align: center;
+        }
+
+        .location-sections {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .section-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-content {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* 多媒體播放器 */
+        .media-player {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 40px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .video-container {
+            width: 100%;
+            height: 400px;
+            background: #000;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+
+        .video-info {
+            text-align: center;
+        }
+
+        .video-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .video-description {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* 導覽控制 */
+        .navigation-controls {
+            position: fixed;
+            bottom: 40px;
+            right: 40px;
+            display: flex;
+            gap: 20px;
+            z-index: 100;
+        }
+
+        .nav-control {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(45deg, #8B4513, #2E8B57);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+
+        .nav-control:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .back-control {
+            position: fixed;
+            top: 140px;
+            left: 40px;
+            background: rgba(255,255,255,0.9);
+            color: #333;
+            border: 2px solid #ddd;
+            z-index: 100;
+        }
+
+        .back-control:hover {
+            background: white;
+            border-color: #8B4513;
+        }
+
+        /* 閒置警告 */
+        .idle-warning {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0,0,0,0.9);
+            color: white;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            display: none;
+            z-index: 2000;
+            backdrop-filter: blur(10px);
+        }
+
+        .idle-warning.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+            100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        }
+
+        .idle-warning h3 {
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+
+        .idle-warning p {
+            opacity: 0.8;
+        }
+
+        /* 響應式設計 */
+        @media (max-width: 1024px) {
+            .main-menu {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .menu-item.map-item {
+                grid-column: 1;
+            }
+            
+            .location-sections {
+                grid-template-columns: 1fr;
+            }
+            
+            .map-container {
+                width: 600px;
+                height: 450px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 0 20px;
+            }
+            
+            .content-area {
+                padding: 20px;
+            }
+            
+            .page-content {
+                padding: 20px;
+            }
+            
+            .map-container {
+                width: 400px;
+                height: 300px;
+            }
+            
+            .central-hub {
+                width: 120px;
+                height: 120px;
+                font-size: 1rem;
+            }
+            
+            .satellite-point {
+                width: 80px;
+                height: 80px;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 閒置首頁 -->
+        <div class="idle-home" id="idleHome">
+            <div class="background-video"></div>
+            <div class="lang-selector">
+                <button class="lang-btn active" onclick="switchLanguage('zh')">中文</button>
+                <button class="lang-btn" onclick="switchLanguage('en')">English</button>
+            </div>
+            <div class="main-logo">🌟 旅人市集</div>
+            <div class="tagline">創生互動平台・在地青年聚點</div>
+            <button class="enter-portal" onclick="enterMainScreen()">
+                <span>點選探索旅程</span>
+            </button>
+        </div>
+
+        <!-- 主畫面 -->
+        <div class="main-screen" id="mainScreen">
+            <div class="header">
+                <div class="header-logo">🌟 旅人市集導覽平台</div>
+                <div class="header-controls">
+                    <button class="header-btn" onclick="switchLanguage('zh')">中文</button>
+                    <button class="header-btn" onclick="switchLanguage('en')">English</button>
+                </div>
+            </div>
+
+            <div class="content-area">
+                <!-- 主選單 -->
+                <div class="main-menu" id="mainMenu">
+                    <div class="menu-item map-item" onclick="showContent('map')">
+                        <div class="menu-icon">🗺️</div>
+                        <div class="menu-title">展區互動地圖</div>
+                        <div class="menu-description">探索旅人市集培育站與四大衛星據點的完整地圖</div>
+                    </div>
+                    
+                    <div class="menu-item" onclick="showContent('products')">
+                        <div class="menu-icon">🛍️</div>
+                        <div class="menu-title">找產品</div>
+                        <div class="menu-description">農產、食品、手作商品完整彙整</div>
+                    </div>
+                    
+                    <div class="menu-item" onclick="showContent('services')">
+                        <div class="menu-icon">💬</div>
+                        <div class="menu-title">找服務</div>
+                        <div class="menu-description">場租、導覽、工作坊等服務介紹</div>
+                    </div>
+                    
+                    <div class="menu-item" onclick="showContent('news')">
+                        <div class="menu-icon">📰</div>
+                        <div class="menu-title">最新消息</div>
+                        <div class="menu-description">市集活動、講座與共創成果</div>
+                    </div>
+                    
+                    <div class="menu-item" onclick="showContent('media')">
+                        <div class="menu-icon">🎥</div>
+                        <div class="menu-title">多媒體專區</div>
+                        <div class="menu-description">影片故事、活動照片與音聲內容</div>
+                    </div>
+                    
+                    <div class="menu-item" onclick="showContent('about')">
+                        <div class="menu-icon">📖</div>
+                        <div class="menu-title">關於我們</div>
+                        <div class="menu-description">團隊介紹、發展歷程與計畫願景</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 內容頁面 -->
+        <!-- 互動地圖頁 -->
+        <div class="content-page" id="mapContent">
+            <div class="page-header">
+                <div>
+                    <div class="page-title">🗺️ 展區互動地圖</div>
+                    <div class="page-subtitle">探索旅人市集培育站與四大衛星據點</div>
+                </div>
+            </div>
+            <div class="page-content">
+                <div class="interactive-map">
+                    <div class="map-container">
+                        <div class="connection-line line1"></div>
+                        <div class="connection-line line2"></div>
+                        <div class="connection-line line3"></div>
+                        <div class="connection-line line4"></div>
+                        
+                        <div class="central-hub" onclick="showLocation('main')">
+                            <div>🏛️</div>
+                            <div>旅人市集</div>
+                            <div>培育站</div>
+                        </div>
+                        
+                        <div class="satellite-point point1" onclick="showLocation('shuilin')">
+                            <div>🌊</div>
+                            <div>水林</div>
+                            <div>雲林海青</div>
+                        </div>
+                        
+                        <div class="satellite-point point2" onclick="showLocation('dalin')">
+                            <div>🏔️</div>
+                            <div>大林</div>
+                            <div>雪香亭</div>
+                        </div>
+                        
+                        <div class="satellite-point point3" onclick="showLocation('liujiao')">
+                            <div>☕</div>
+                            <div>六腳</div>
+                            <div>鉛花咖啡</div>
+                        </div>
+                        
+                        <div class="satellite-point point4" onclick="showLocation('kouhu')">
+                            <div>🐲</div>
+                            <div>口湖</div>
+                            <div>成龍捌貳</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 據點詳情頁 -->
+        <div class="content-page" id="locationContent">
+            <div class="page-header">
+                <div>
+                    <div class="page-title" id="locationTitle">據點詳情</div>
+                    <div class="page-subtitle" id="locationSubtitle">據點介紹與服務資訊</div>
+                </div>
+            </div>
+            <div class="page-content">
+                <div class="location-detail">
+                    <div class="location-hero" id="locationHero">
+                        據點封面圖片區域
+                    </div>
+                    
+                    <div class="location-sections">
+                        <div class="section-card">
+                            <div class="section-title">
+                                <span>🧭</span>
+                                <span>據點介紹</span>
+                            </div>
+                            <div class="section-content" id="locationIntro">
+                                據點故事、背景、所屬區域、營運團隊等詳細介紹...
+                            </div>
+                        </div>
+                        
+                        <div class="section-card">
+                            <div class="section-title">
+                                <span>🛍️</span>
+                                <span>商品與服務</span>
+                            </div>
+                            <div class="section-content" id="locationServices">
+                                提供的商品、服務內容、導覽資訊等...
+                            </div>
+                        </div>
+                        
+                        <div class="section-card">
+                            <div class="section-title">
+                                <span>📍</span>
+                                <span>周邊推薦</span>
+                            </div>
+                            <div class="section-content" id="locationNearby">
+                                附近景點、店家介紹，結合地圖定位...
+                            </div>
+                        </div>
+                        
+                        <div class="section-card">
+                            <div class="section-title">
+                                <span>📱</span>
+                                <span>聯絡資訊</span>
+                            </div>
+                            <div class="section-content" id="locationContact">
+                                QR code、IG、FB、地址資訊等聯絡方式...
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 產品頁 -->
+        <div class="content-page" id="productsContent">
+            <div class="page-header">
+                <div>
+                    <div class="page-title">🛍️ 找產品</div>
+                    <div class="page-subtitle">探索各據點的精選商品</div>
+                </div>
+            </div>
+            <div class="page-content">
+                <div class="product-grid">
+                    <div class="product-card">
+                        <div class="product-image">🌾</div>
+                        <div class="product-info">
+                            <div class="product-title">有機稻米</div>
+                            <div class="product-description">來自水林在地小農的有機栽培稻米，無農藥、無化肥，保留天然香甜</div>
+                            <div class="product-tags">
+                                <span class="tag">農產</span>
+                                <span class="tag">有機</span>
+                                <span class="tag">水林</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="product-card">
+                        <div class="product-image">☕</div>
+                        <div class="product-info">
+                            <div class="product-title">手沖咖啡豆</div>
+                            <div class="product-description">鉛花咖啡精選阿里山咖啡豆，手工烘焙，層次豐富</div>
+                            <div class="product-tags">
+                                <span class="tag">飲品</span>
+                                <span class="tag">手作</span>
+                                <span class="tag">六腳</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="product-card">
+                        <div class="product-image">🍵</div>
+                        <div class="product-info">
+                            <div class="product-title">雪香亭茶葉</div>
+                            <div class="product-description">大林在地茶園的高山茶，甘醇回甘，是茶葉愛好者的首選</div>
+                            <div class="product-tags">
+                                <span class="tag">茶葉</span>
+                                <span class="tag">高山</span>
+                                <span class="tag">大林</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="product-card">
+                        <div class="product-image">🎨</div>
+                        <div class="product-info">
+                            <div class="product-title">在地手工藝品</div>
+                            <div class="product-description">成龍捌貳工作坊的手工藝品，結合傳統技藝與現代設計</div>
+                            <div class="product-tags">
+                                <span class="tag">手工</span>
+                                <span class="tag">藝品</span>
+                                <span class="tag">口湖</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 多媒體頁 -->
+        <div class="content-page" id="mediaContent">
+            <div class="page-header">
+                <div>
+                    <div class="page-title">🎥 多媒體專區</div>
+                    <div class="page-subtitle">影片故事、活動照片與音聲內容</div>
+                </div>
+            </div>
+            <div class="page-content">
+                <div class="media-player">
+                    <div class="video-container">
+                        🎬 影片播放區域<br>
+                        <small>支援 YouTube、Vimeo 或本地影片檔案</small>
+                    </div>
+                    <div class="video-info">
+                        <div class="video-title">旅人市集創生故事</div>
+                        <div class="video-description">
+                            透過影像記錄，了解在地青年如何透過旅人市集平台，結合傳統文化與現代創新，
+                            為地方帶來新的生命力，創造永續的在地經濟模式。
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="product-grid">
+                    <div class="product-card">
+                        <div class="product-image">📸</div>
+                        <div class="product-info">
+                            <div class="product-title">活動照片牆</div>
+                            <div class="product-description">各據點舉辦的活動精彩瞬間，按主題分類展示</div>
+                            <div class="product-tags">
+                                <span class="tag">相片</span>
+                                <span class="tag">活動</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="product-card">
+                        <div class="product-image">🎙️</div>
+                        <div class="product-info">
+                            <div class="product-title">創業者訪談</div>
+                            <div class="product-description">Podcast 訪談內容，分享創業心路歷程</div>
+                            <div class="product-tags">
+                                <span class="tag">音頻</span>
+                                <span class="tag">訪談</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 其他內容頁面 -->
+        <div class="content-page" id="servicesContent">
+            <div class="page-header">
+                <div>
+                    <div class="page-title">💬 找服務</div>
+                    <div class="page-subtitle">場租、導覽、工作坊等服務介紹</div>
+                </div>
+            </div>
+            <div class="page-content">
+                <div class="product-grid">
+                    <div class="product-card">
+                        <div class="product-image">🏢</div>
+                        <div class="product-info">
+                            <div class="product-title">場地租借</div>
+                            <div class="product-description">提供多功能空間租借服務，適合會議、活動、展覽使用</div>
+                            <div class="product-tags">
+                                <span class="tag">場租</span>
+                                <span class="tag">活動</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="product-card">
+                        <div class="product-image">🗺️</div>
+                        <div class="product-info">
+                            <div class="product-title">導覽服務</div>
+                            <div class="product-description">專業導覽員帶領深度探索各據點文化與故事</div>
+                            <div class="product-tags">
+                                <span class="tag">導覽</span>
+                                <span class="tag">文化</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="product-card">
+                        <div class="product-image">👥</div>
+                        <div class="product-info">
+                            <div class="product-title">工作坊課程</div>
+                            <div class="product-description">手作體驗、技能學習、創業輔導等多元課程</div>
+                            <div class="product-tags">
+                                <span class="tag">教育</span>
+                                <span class="tag">體驗</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-page" id="newsContent">
+            <div class="page-header">
+                <div>
+                    <div class="page-title">📰 最新消息</div>
+                    <div class="page-subtitle">市集活動、講座與共創成果</div>
+                </div>
+            </div>
+            <div class="page-content">
+                <div class="product-grid">
+                    <div class="product-card">
+                        <div class="product-image">📅</div>
+                        <div class="product-info">
+                            <div class="product-title">夏日市集活動</div>
+                            <div class="product-description">7月份各據點聯合舉辦夏日市集，邀請大家一起來體驗在地文化</div>
+                            <div class="product-tags">
+                                <span class="tag">市集</span>
+                                <span class="tag">活動</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="product-card">
+                        <div class="product-image">🎓</div>
+                        <div class="product-info">
+                            <div class="product-title">創業講座系列</div>
+                            <div class="product-description">邀請成功創業者分享經驗，提供實用的創業知識與技巧</div>
+                            <div class="product-tags">
+                                <span class="tag">講座</span>
+                                <span class="tag">創業</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-page" id="aboutContent">
+            <div class="page-header">
+                <div>
+                    <div class="page-title">📖 關於我們</div>
+                    <div class="page-subtitle">團隊介紹、發展歷程與計畫願景</div>
+                </div>
+            </div>
+            <div class="page-content">
+                <div class="location-detail">
+                    <div class="location-sections">
+                        <div class="section-card">
+                            <div class="section-title">
+                                <span>🎯</span>
+                                <span>計畫願景</span>
+                            </div>
+                            <div class="section-content">
+                                旅人市集致力於打造一個整合性的在地創生平台，透過培育站與衛星據點的網絡，
+                                連結在地青年、傳統文化與現代創新，創造永續的地方經濟模式。
+                            </div>
+                        </div>
+                        
+                        <div class="section-card">
+                            <div class="section-title">
+                                <span>👥</span>
+                                <span>執行團隊</span>
+                            </div>
+                            <div class="section-content">
+                                由在地青年、文化工作者、創業輔導專家組成的跨領域團隊，
+                                結合豐富的實務經驗與創新思維，為地方發展注入新活力。
+                            </div>
+                        </div>
+                        
+                        <div class="section-card">
+                            <div class="section-title">
+                                <span>🌱</span>
+                                <span>發展歷程</span>
+                            </div>
+                            <div class="section-content">
+                                從單點的創業育成，擴展為多據點的網絡合作，
+                                逐步建立起完整的在地創生生態系統。
+                            </div>
+                        </div>
+                        
+                        <div class="section-card">
+                            <div class="section-title">
+                                <span>🚀</span>
+                                <span>未來展望</span>
+                            </div>
+                            <div class="section-content">
+                                持續擴大合作網絡，深化在地文化傳承，
+                                成為台灣地方創生的典範模式。
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 導覽控制 -->
+        <button class="nav-control back-control" id="backBtn" onclick="goBack()" style="display: none;">←</button>
+        <div class="navigation-controls">
+            <button class="nav-control" onclick="goHome()">🏠</button>
+        </div>
+
+        <!-- 閒置警告 -->
+        <div class="idle-warning" id="idleWarning">
+            <h3>系統將在 10 秒後返回首頁</h3>
+            <p>請點選任意位置繼續使用</p>
+        </div>
+    </div>
+
+    <script>
+        let currentPage = 'idle';
+        let pageStack = [];
+        let idleTimer;
+        let warningTimer;
+        let currentLanguage = 'zh';
+
+        // 語言切換
+        function switchLanguage(lang) {
+            currentLanguage = lang;
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.header-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // 這裡可以實現多語言內容切換
+            console.log(`Language switched to: ${lang}`);
+        }
+
+        // 進入主畫面
+        function enterMainScreen() {
+            document.getElementById('idleHome').classList.add('hidden');
+            setTimeout(() => {
+                document.getElementById('mainScreen').classList.add('active');
+                currentPage = 'main';
+                resetIdleTimer();
+            }, 800);
+        }
+
+        // 顯示內容
+        function showContent(contentId) {
+            hideAllContent();
+            document.getElementById(contentId + 'Content').classList.add('active');
+            pageStack.push(currentPage);
+            currentPage = contentId;
+            document.getElementById('backBtn').style.display = 'block';
+            resetIdleTimer();
+        }
+
+        // 顯示據點詳情
+        function showLocation(locationId) {
+            hideAllContent();
+            document.getElementById('locationContent').classList.add('active');
+            updateLocationContent(locationId);
+            pageStack.push(currentPage);
+            currentPage = 'location';
+            document.getElementById('backBtn').style.display = 'block';
+            resetIdleTimer();
+        }
+
+        // 更新據點內容
+        function updateLocationContent(locationId) {
+            const locations = {
+                main: {
+                    title: '🏛️ 旅人市集培育站',
+                    subtitle: '創生平台的核心基地',
+                    intro: '旅人市集培育站是整個創生網絡的核心，提供創業輔導、資源媒合、活動舉辦等多元服務...',
+                    services: '創業輔導、空間租借、活動策劃、網絡媒合等服務...',
+                    nearby: '鄰近傳統市場、文化中心、青年活動中心等...',
+                    contact: '地址：xxx | 電話：xxx | FB：xxx'
+                },
+                shuilin: {
+                    title: '🌊 水林・雲林海青據點',
+                    subtitle: '海線文化的創新基地',
+                    intro: '位於雲林海線的水林據點，結合海洋文化與農業傳統，發展獨特的地方特色...',
+                    services: '有機農產品、海鮮加工、文化導覽等...',
+                    nearby: '水林海岸、傳統漁港、農田體驗區...',
+                    contact: '地址：雲林縣水林鄉xxx | 電話：xxx'
+                },
+                dalin: {
+                    title: '🏔️ 大林・雪香亭據點',
+                    subtitle: '山林茶香的文化空間',
+                    intro: '大林雪香亭據點專注於茶文化推廣，結合山林資源與傳統製茶工藝...',
+                    services: '茶葉販售、茶藝體驗、登山導覽等...',
+                    nearby: '阿里山茶園、竹林步道、文化古蹟...',
+                    contact: '地址：嘉義縣大林鎮xxx | 電話：xxx'
+                },
+                liujiao: {
+                    title: '☕ 六腳・鉛花咖啡據點',
+                    subtitle: '咖啡文化的創意聚落',
+                    intro: '六腳鉛花咖啡據點以咖啡為媒介，創造社區交流平台，推廣在地文化...',
+                    services: '精品咖啡、烘焙體驗、社區活動等...',
+                    nearby: '六腳老街、傳統建築、文創小店...',
+                    contact: '地址：嘉義縣六腳鄉xxx | 電話：xxx'
+                },
+                kouhu: {
+                    title: '🐲 口湖・成龍捌貳據點',
+                    subtitle: '漁村文化的藝術空間',
+                    intro: '口湖成龍捌貳據點致力於保存漁村文化，結合藝術創作與社區營造...',
+                    services: '藝術工作坊、文化導覽、海鮮料理等...',
+                    nearby: '成龍溼地、口湖漁港、藝術村落...',
+                    contact: '地址：雲林縣口湖鄉xxx | 電話：xxx'
+                }
+            };
+
+            const location = locations[locationId];
+            if (location) {
+                document.getElementById('locationTitle').textContent = location.title;
+                document.getElementById('locationSubtitle').textContent = location.subtitle;
+                document.getElementById('locationIntro').textContent = location.intro;
+                document.getElementById('locationServices').textContent = location.services;
+                document.getElementById('locationNearby').textContent = location.nearby;
+                document.getElementById('locationContact').textContent = location.contact;
+            }
+        }
+
+        // 隱藏所有內容
+        function hideAllContent() {
+            document.querySelectorAll('.content-page').forEach(page => {
+                page.classList.remove('active');
+            });
+            document.getElementById('mainMenu').style.display = 'none';
+        }
+
+        // 返回上一頁
+        function goBack() {
+            if (pageStack.length > 0) {
+                const previousPage = pageStack.pop();
+                hideAllContent();
+                
+                if (previousPage === 'main') {
+                    document.getElementById('mainMenu').style.display = 'grid';
+                    document.getElementById('backBtn').style.display = 'none';
+                } else {
+                    document.getElementById(previousPage + 'Content').classList.add('active');
+                }
+                
+                currentPage = previousPage;
+                if (pageStack.length === 0) {
+                    document.getElementById('backBtn').style.display = 'none';
+                }
+                resetIdleTimer();
+            }
+        }
+
+        // 回到首頁
+        function goHome() {
+            hideAllContent();
+            document.getElementById('mainMenu').style.display = 'grid';
+            document.getElementById('backBtn').style.display = 'none';
+            pageStack = [];
+            currentPage = 'main';
+            resetIdleTimer();
+        }
+
+        // 重置閒置計時器
+        function resetIdleTimer() {
+            clearTimeout(idleTimer);
+            clearTimeout(warningTimer);
+            document.getElementById('idleWarning').classList.remove('show');
+            
+            // 50秒後顯示警告
+            warningTimer = setTimeout(() => {
+                document.getElementById('idleWarning').classList.add('show');
+            }, 50000);
+            
+            // 60秒後返回首頁
+            idleTimer = setTimeout(() => {
+                document.getElementById('idleWarning').classList.remove('show');
+                returnToIdle();
+            }, 60000);
+        }
+
+        // 返回閒置狀態
+        function returnToIdle() {
+            document.getElementById('mainScreen').classList.remove('active');
+            document.getElementById('idleHome').classList.remove('hidden');
+            hideAllContent();
+            document.getElementById('mainMenu').style.display = 'grid';
+            document.getElementById('backBtn').style.display = 'none';
+            pageStack = [];
+            currentPage = 'idle';
+        }
+
+        // 監聽用戶交互
+        document.addEventListener('click', resetIdleTimer);
+        document.addEventListener('touchstart', resetIdleTimer);
+        document.getElementById('idleWarning').addEventListener('click', resetIdleTimer);
+
+        // 初始化
+        resetIdleTimer();
+    </script>
+</body>
+</html>
