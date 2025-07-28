@@ -54,9 +54,8 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><defs><linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:%238B4513;stop-opacity:1" /><stop offset="50%" style="stop-color:%232E8B57;stop-opacity:1" /><stop offset="100%" style="stop-color:%23FF8C00;stop-opacity:1" /></linearGradient></defs><rect width="100%" height="100%" fill="url(%23bg)"/></svg>') center/cover;
-            opacity: 0.3;
-            animation: breathe 4s ease-in-out infinite alternate;
+            background: url('/images/home.jpg') center/cover no-repeat;
+            opacity: 0.8;
         }
 
         @keyframes breathe {
@@ -65,12 +64,14 @@
         }
 
         .main-logo {
-            font-size: 4rem;
-            font-weight: 700;
-            color: white;
+            width: 600px;
+            height: 400px;
+            background: url('/images/logo.png') center/contain no-repeat;
             margin-bottom: 1rem;
-            text-shadow: 0 4px 20px rgba(0,0,0,0.5);
-            animation: glow 2s ease-in-out infinite alternate;
+            position: relative;
+            z-index: 10;
+            image-rendering: crisp-edges;
+            image-rendering: -webkit-optimize-contrast;
         }
 
         @keyframes glow {
@@ -166,7 +167,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            background: url('/images/_002.jpg') center/cover no-repeat;
             display: none;
             flex-direction: column;
             animation: slideIn 0.6s ease-out;
@@ -183,22 +184,22 @@
 
         .header {
             height: 100px;
-            background: rgba(255,255,255,0.95);
-            backdrop-filter: blur(10px);
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.3);
             display: flex;
             align-items: center;
             justify-content: space-between;
             padding: 0 40px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            margin: 20px;
+            border-radius: 25px;
         }
 
         .header-logo {
             font-size: 2rem;
             font-weight: 700;
-            background: linear-gradient(45deg, #8B4513, #2E8B57, #FF8C00);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: white;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
         }
 
         .header-controls {
@@ -209,9 +210,10 @@
 
         .header-btn {
             padding: 12px 24px;
-            background: linear-gradient(45deg, #8B4513, #2E8B57);
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(255,255,255,0.3);
             color: white;
-            border: none;
             border-radius: 25px;
             cursor: pointer;
             font-size: 1rem;
@@ -224,41 +226,68 @@
             box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
 
+        /* 主選單重新布局 */
         .content-area {
             flex: 1;
-            padding: 40px;
+            padding: 20px 40px 10px 40px;
             overflow-y: auto;
             position: relative;
-        }
-
-        /* 主選單網格 */
-        .main-menu {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            grid-template-rows: repeat(3, 1fr);
-            gap: 30px;
-            max-width: 1400px;
-            margin: 0 auto;
-            height: 100%;
-        }
-
-        .menu-item {
-            background: white;
-            border-radius: 20px;
-            padding: 40px;
-            cursor: pointer;
-            transition: all 0.4s ease;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            position: relative;
-            overflow: hidden;
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
         }
 
-        .menu-item::before {
+        .main-menu {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            gap: 40px;
+        }
+
+        /* 中間的地圖區域 */
+        .map-section {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .map-image {
+            width: 400px;
+            height: 200px;
+            background: url('/images/logo.png') center/contain no-repeat;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 20px;
+        }
+
+        .map-image:hover {
+            transform: scale(1.05);
+        }
+
+        /* 底部選單 */
+        .bottom-menu {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 10px 0;
+        }
+
+        .bottom-menu-item {
+            flex: 1;
+            padding: 10px;
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(20px);
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            color: white;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .bottom-menu-item::before {
             content: '';
             position: absolute;
             top: 0;
@@ -269,51 +298,23 @@
             transition: left 0.6s ease;
         }
 
-        .menu-item:hover::before {
+        .bottom-menu-item:hover::before {
             left: 100%;
         }
 
-        .menu-item:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        .bottom-menu-item:hover {
+            background: rgba(255,255,255,0.25);
+            transform: translateY(-5px);
         }
 
-        .menu-item.map-item {
-            grid-column: 1 / -1;
-            grid-row: 1 / 2;
-            background: linear-gradient(135deg, #8B4513 0%, #2E8B57 100%);
-            color: white;
+        .bottom-menu-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
         }
 
-        .menu-icon {
-            font-size: 4rem;
-            margin-bottom: 20px;
-            transition: transform 0.3s ease;
-        }
-
-        .menu-item:hover .menu-icon {
-            transform: scale(1.1);
-        }
-
-        .menu-title {
-            font-size: 1.8rem;
-            font-weight: 600;
-            margin-bottom: 15px;
-            color: #333;
-        }
-
-        .map-item .menu-title {
-            color: white;
-        }
-
-        .menu-description {
+        .bottom-menu-title {
             font-size: 1.1rem;
-            color: #666;
-            line-height: 1.6;
-        }
-
-        .map-item .menu-description {
-            color: rgba(255,255,255,0.9);
+            font-weight: 600;
         }
 
         /* 內容頁面 */
@@ -323,7 +324,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: #f8f9fa;
+            background: url('/images/_002.jpg') center/cover no-repeat;
             display: none;
             flex-direction: column;
             animation: slideIn 0.5s ease-out;
@@ -335,28 +336,34 @@
 
         .page-header {
             height: 120px;
-            background: linear-gradient(135deg, #8B4513 0%, #2E8B57 100%);
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.3);
             display: flex;
             align-items: center;
             padding: 0 40px;
             color: white;
             position: relative;
+            margin: 20px;
+            border-radius: 25px;
         }
 
         .page-title {
             font-size: 2.5rem;
             font-weight: 700;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
         }
 
         .page-subtitle {
             font-size: 1.2rem;
             opacity: 0.9;
             margin-top: 10px;
+            text-shadow: 0 1px 5px rgba(0,0,0,0.3);
         }
 
         .page-content {
             flex: 1;
-            padding: 40px;
+            padding: 20px 40px 10px 40px;
             overflow-y: auto;
         }
 
@@ -731,10 +738,9 @@
         <div class="idle-home" id="idleHome">
             <div class="background-video"></div>
             <div class="lang-selector">
-                <button class="lang-btn active" onclick="switchLanguage('zh')">中文</button>
-                <button class="lang-btn" onclick="switchLanguage('en')">English</button>
+                <!-- 語言選擇已移除 -->
             </div>
-            <div class="main-logo">🌟 旅人市集</div>
+            <div class="main-logo"></div>
             <div class="tagline">創生互動平台・在地青年聚點</div>
             <button class="enter-portal" onclick="enterMainScreen()">
                 <span>點選探索旅程</span>
@@ -746,48 +752,44 @@
             <div class="header">
                 <div class="header-logo">🌟 旅人市集導覽平台</div>
                 <div class="header-controls">
-                    <button class="header-btn" onclick="switchLanguage('zh')">中文</button>
-                    <button class="header-btn" onclick="switchLanguage('en')">English</button>
+                    <!-- 語言選擇已移除 -->
                 </div>
             </div>
 
             <div class="content-area">
                 <!-- 主選單 -->
                 <div class="main-menu" id="mainMenu">
-                    <div class="menu-item map-item" onclick="showContent('map')">
-                        <div class="menu-icon">🗺️</div>
-                        <div class="menu-title">展區互動地圖</div>
-                        <div class="menu-description">探索旅人市集培育站與四大衛星據點的完整地圖</div>
+                    <!-- 中間地圖區域 -->
+                    <div class="map-section">
+                        <div class="map-image" onclick="showContent('map')"></div>
                     </div>
                     
-                    <div class="menu-item" onclick="showContent('products')">
-                        <div class="menu-icon">🛍️</div>
-                        <div class="menu-title">找產品</div>
-                        <div class="menu-description">農產、食品、手作商品完整彙整</div>
-                    </div>
-                    
-                    <div class="menu-item" onclick="showContent('services')">
-                        <div class="menu-icon">💬</div>
-                        <div class="menu-title">找服務</div>
-                        <div class="menu-description">場租、導覽、工作坊等服務介紹</div>
-                    </div>
-                    
-                    <div class="menu-item" onclick="showContent('news')">
-                        <div class="menu-icon">📰</div>
-                        <div class="menu-title">最新消息</div>
-                        <div class="menu-description">市集活動、講座與共創成果</div>
-                    </div>
-                    
-                    <div class="menu-item" onclick="showContent('media')">
-                        <div class="menu-icon">🎥</div>
-                        <div class="menu-title">多媒體專區</div>
-                        <div class="menu-description">影片故事、活動照片與音聲內容</div>
-                    </div>
-                    
-                    <div class="menu-item" onclick="showContent('about')">
-                        <div class="menu-icon">📖</div>
-                        <div class="menu-title">關於我們</div>
-                        <div class="menu-description">團隊介紹、發展歷程與計畫願景</div>
+                    <!-- 底部選單列 -->
+                    <div class="bottom-menu">
+                        <div class="bottom-menu-item" onclick="showContent('products')">
+                            <div class="bottom-menu-icon">🛍️</div>
+                            <div class="bottom-menu-title">找產品</div>
+                        </div>
+                        
+                        <div class="bottom-menu-item" onclick="showContent('services')">
+                            <div class="bottom-menu-icon">💬</div>
+                            <div class="bottom-menu-title">找服務</div>
+                        </div>
+                        
+                        <div class="bottom-menu-item" onclick="showContent('news')">
+                            <div class="bottom-menu-icon">📰</div>
+                            <div class="bottom-menu-title">最新消息</div>
+                        </div>
+                        
+                        <div class="bottom-menu-item" onclick="showContent('media')">
+                            <div class="bottom-menu-icon">🎥</div>
+                            <div class="bottom-menu-title">多媒體專區</div>
+                        </div>
+                        
+                        <div class="bottom-menu-item" onclick="showContent('about')">
+                            <div class="bottom-menu-icon">📖</div>
+                            <div class="bottom-menu-title">關於我們</div>
+                        </div>
                     </div>
                 </div>
             </div>
