@@ -1,0 +1,723 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Noto Sans TC', sans-serif;
+    overflow: hidden;
+    background: #1a1a1a;
+    touch-action: manipulation;
+    user-select: none;
+}
+
+.container {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+}
+
+/* 閒置首頁 */
+.idle-home {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #8B4513 0%, #2E8B57 50%, #FF8C00 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    transition: opacity 0.8s ease;
+}
+
+.idle-home.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.background-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('/images/home.jpg') center/cover no-repeat;
+    opacity: 0.8;
+}
+
+@keyframes breathe {
+    0% { transform: scale(1); }
+    100% { transform: scale(1.05); }
+}
+
+.main-logo {
+    width: 600px;
+    height: 400px;
+    background: url('/images/logo.png') center/contain no-repeat;
+    margin-bottom: 1rem;
+    position: relative;
+    z-index: 10;
+    image-rendering: crisp-edges;
+    image-rendering: -webkit-optimize-contrast;
+}
+
+@keyframes glow {
+    0% { text-shadow: 0 4px 20px rgba(255,255,255,0.3); }
+    100% { text-shadow: 0 4px 30px rgba(255,255,255,0.6); }
+}
+
+.tagline {
+    font-size: 1.8rem;
+    color: white;
+    margin-bottom: 3rem;
+    text-align: center;
+    opacity: 0.9;
+    animation: fadeInUp 1s ease-out;
+}
+
+@keyframes fadeInUp {
+    0% { opacity: 0; transform: translateY(30px); }
+    100% { opacity: 0.9; transform: translateY(0); }
+}
+
+.enter-portal {
+    padding: 2rem 4rem;
+    font-size: 1.5rem;
+    font-weight: 500;
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(20px);
+    border: 3px solid rgba(255,255,255,0.3);
+    color: white;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.enter-portal::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+    transform: rotate(45deg);
+    transition: all 0.6s ease;
+}
+
+.enter-portal:hover::before {
+    transform: rotate(45deg) translate(50%, 50%);
+}
+
+.enter-portal:hover {
+    background: rgba(255,255,255,0.25);
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.lang-selector {
+    position: absolute;
+    top: 40px;
+    right: 40px;
+    display: flex;
+    gap: 15px;
+}
+
+.lang-btn {
+    padding: 15px 25px;
+    background: rgba(255,255,255,0.1);
+    border: 2px solid rgba(255,255,255,0.3);
+    color: white;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.lang-btn.active {
+    background: rgba(255,255,255,0.3);
+    border-color: rgba(255,255,255,0.6);
+}
+
+.lang-btn:hover {
+    background: rgba(255,255,255,0.2);
+    transform: translateY(-2px);
+}
+
+/* 主選單畫面 */
+.main-screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('/images/_002.jpg') center/cover no-repeat;
+    display: none;
+    flex-direction: column;
+    animation: slideIn 0.6s ease-out;
+}
+
+@keyframes slideIn {
+    0% { transform: translateX(100%); }
+    100% { transform: translateX(0); }
+}
+
+.main-screen.active {
+    display: flex;
+}
+
+.header {
+    height: 100px;
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+    margin: 20px;
+    border-radius: 25px;
+}
+
+.header-logo {
+    font-size: 2rem;
+    font-weight: 700;
+    color: white;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+}
+
+.header-controls {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.header-btn {
+    padding: 12px 24px;
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(20px);
+    border: 2px solid rgba(255,255,255,0.3);
+    color: white;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.header-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* 主選單重新布局 */
+.content-area {
+    flex: 1;
+    padding: 20px 40px 10px 40px;
+    overflow-y: auto;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.main-menu {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    gap: 40px;
+}
+
+/* 中間的地圖區域 */
+.map-section {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.map-image {
+    width: 400px;
+    height: 200px;
+    background: url('/images/logo.png') center/contain no-repeat;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 20px;
+}
+
+.map-image:hover {
+    transform: scale(1.05);
+}
+
+/* 底部選單 */
+.bottom-menu {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 10px 0;
+}
+
+.bottom-menu-item {
+    flex: 1;
+    padding: 10px;
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(20px);
+    border: 3px solid rgba(255,255,255,0.3);
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.4s ease;
+    color: white;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.bottom-menu-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    transition: left 0.6s ease;
+}
+
+.bottom-menu-item:hover::before {
+    left: 100%;
+}
+
+.bottom-menu-item:hover {
+    background: rgba(255,255,255,0.25);
+    transform: translateY(-5px);
+}
+
+.bottom-menu-icon {
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.bottom-menu-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+/* 內容頁面 */
+.content-page {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('/images/_002.jpg') center/cover no-repeat;
+    display: none;
+    flex-direction: column;
+    animation: slideIn 0.5s ease-out;
+}
+
+.content-page.active {
+    display: flex;
+}
+
+.page-header {
+    height: 120px;
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.3);
+    display: flex;
+    align-items: center;
+    padding: 0 40px;
+    color: white;
+    position: relative;
+    margin: 20px;
+    border-radius: 25px;
+}
+
+.page-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+}
+
+.page-subtitle {
+    font-size: 1.2rem;
+    opacity: 0.9;
+    margin-top: 10px;
+    text-shadow: 0 1px 5px rgba(0,0,0,0.3);
+}
+
+.page-content {
+    flex: 1;
+    padding: 20px 40px 10px 40px;
+    overflow-y: auto;
+}
+
+/* 互動地圖 */
+.interactive-map {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    position: relative;
+}
+
+.map-container {
+    position: relative;
+    width: 800px;
+    height: 600px;
+}
+
+.central-hub {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 200px;
+    height: 200px;
+    background: linear-gradient(45deg, #8B4513, #FF8C00);
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    color: white;
+    font-weight: 600;
+    font-size: 1.2rem;
+    text-align: center;
+}
+
+.central-hub:hover {
+    transform: translate(-50%, -50%) scale(1.1);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+}
+
+.satellite-point {
+    position: absolute;
+    width: 120px;
+    height: 120px;
+    background: linear-gradient(45deg, #2E8B57, #20B2AA);
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+    color: white;
+    font-weight: 500;
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+.satellite-point:hover {
+    transform: scale(1.2);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.satellite-point.point1 { top: 20px; left: 50%; transform: translateX(-50%); }
+.satellite-point.point2 { top: 50%; right: 20px; transform: translateY(-50%); }
+.satellite-point.point3 { bottom: 20px; left: 50%; transform: translateX(-50%); }
+.satellite-point.point4 { top: 50%; left: 20px; transform: translateY(-50%); }
+
+.connection-line {
+    position: absolute;
+    height: 2px;
+    background: linear-gradient(90deg, #8B4513, #2E8B57);
+    opacity: 0.3;
+    pointer-events: none;
+}
+
+.line1 { width: 200px; top: 120px; left: 50%; transform: translateX(-50%); }
+.line2 { width: 200px; right: 120px; top: 50%; transform: translateY(-50%); }
+.line3 { width: 200px; bottom: 120px; left: 50%; transform: translateX(-50%); }
+.line4 { width: 200px; left: 120px; top: 50%; transform: translateY(-50%); }
+
+/* 產品網格 */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin-top: 20px;
+}
+
+.product-card {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+}
+
+.product-image {
+    width: 100%;
+    height: 200px;
+    background: linear-gradient(135deg, #f0f0f0, #e0e0e0);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    color: #999;
+}
+
+.product-info {
+    padding: 20px;
+}
+
+.product-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.product-description {
+    color: #666;
+    line-height: 1.5;
+    margin-bottom: 15px;
+}
+
+.product-tags {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.tag {
+    padding: 5px 12px;
+    background: linear-gradient(45deg, #8B4513, #2E8B57);
+    color: white;
+    border-radius: 15px;
+    font-size: 0.8rem;
+}
+
+/* 據點詳情頁 */
+.location-detail {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.location-hero {
+    width: 100%;
+    height: 300px;
+    background: linear-gradient(135deg, #8B4513 0%, #2E8B57 100%);
+    border-radius: 20px;
+    margin-bottom: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 2rem;
+    text-align: center;
+}
+
+.location-sections {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    margin-bottom: 40px;
+}
+
+.section-card {
+    background: white;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+}
+
+.section-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #333;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.section-content {
+    color: #666;
+    line-height: 1.6;
+}
+
+/* 多媒體播放器 */
+.media-player {
+    background: white;
+    border-radius: 20px;
+    padding: 40px;
+    margin-bottom: 40px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+}
+
+.video-container {
+    width: 100%;
+    height: 400px;
+    background: #000;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+}
+
+.video-info {
+    text-align: center;
+}
+
+.video-title {
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.video-description {
+    color: #666;
+    line-height: 1.6;
+}
+
+/* 導覽控制 */
+.navigation-controls {
+    position: fixed;
+    bottom: 40px;
+    right: 40px;
+    display: flex;
+    gap: 20px;
+    z-index: 100;
+}
+
+.nav-control {
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(45deg, #8B4513, #2E8B57);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.5rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+}
+
+.nav-control:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.back-control {
+    position: fixed;
+    top: 140px;
+    left: 40px;
+    background: rgba(255,255,255,0.9);
+    color: #333;
+    border: 2px solid #ddd;
+    z-index: 100;
+}
+
+.back-control:hover {
+    background: white;
+    border-color: #8B4513;
+}
+
+/* 閒置警告 */
+.idle-warning {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0,0,0,0.9);
+    color: white;
+    padding: 40px;
+    border-radius: 20px;
+    text-align: center;
+    display: none;
+    z-index: 2000;
+    backdrop-filter: blur(10px);
+}
+
+.idle-warning.show {
+    display: block;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+    100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+.idle-warning h3 {
+    margin-bottom: 15px;
+    font-size: 1.5rem;
+}
+
+.idle-warning p {
+    opacity: 0.8;
+}
+
+/* 響應式設計 */
+@media (max-width: 1024px) {
+    .main-menu {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .menu-item.map-item {
+        grid-column: 1;
+    }
+    
+    .location-sections {
+        grid-template-columns: 1fr;
+    }
+    
+    .map-container {
+        width: 600px;
+        height: 450px;
+    }
+}
+
+@media (max-width: 768px) {
+    .header {
+        padding: 0 20px;
+    }
+    
+    .content-area {
+        padding: 20px;
+    }
+    
+    .page-content {
+        padding: 20px;
+    }
+    
+    .map-container {
+        width: 400px;
+        height: 300px;
+    }
+    
+    .central-hub {
+        width: 120px;
+        height: 120px;
+        font-size: 1rem;
+    }
+    
+    .satellite-point {
+        width: 80px;
+        height: 80px;
+        font-size: 0.8rem;
+    }
+}
