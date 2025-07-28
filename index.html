@@ -11,7 +11,8 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-        }
+        // 初始化
+        resetIdleTimer();
 
         body {
             font-family: 'Noto Sans TC', sans-serif;
@@ -64,8 +65,8 @@
         }
 
         .main-logo {
-            width: 600px;
-            height: 400px;
+            width: 400px;
+            height: 200px;
             background: url('/images/logo.png') center/contain no-repeat;
             margin-bottom: 1rem;
             position: relative;
@@ -252,9 +253,9 @@
         }
 
         .map-image {
-            width: 400px;
-            height: 200px;
-            background: url('/images/logo.png') center/contain no-repeat;
+            width: 600px;
+            height: 400px;
+            background: url('YOUR_MAP_IMAGE_URL_HERE') center/contain no-repeat;
             cursor: pointer;
             transition: all 0.3s ease;
             border-radius: 20px;
@@ -1078,29 +1079,33 @@
                 </div>
             </div>
             <div class="page-content">
-                <div class="product-grid">
-                    <div class="product-card">
-                        <div class="product-image">📅</div>
-                        <div class="product-info">
-                            <div class="product-title">夏日市集活動</div>
-                            <div class="product-description">7月份各據點聯合舉辦夏日市集，邀請大家一起來體驗在地文化</div>
-                            <div class="product-tags">
-                                <span class="tag">市集</span>
-                                <span class="tag">活動</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="product-card">
-                        <div class="product-image">🎓</div>
-                        <div class="product-info">
-                            <div class="product-title">創業講座系列</div>
-                            <div class="product-description">邀請成功創業者分享經驗，提供實用的創業知識與技巧</div>
-                            <div class="product-tags">
-                                <span class="tag">講座</span>
-                                <span class="tag">創業</span>
-                            </div>
-                        </div>
+                <!-- 日曆分頁選單 -->
+                <div class="calendar-tabs">
+                    <button class="calendar-tab active" onclick="switchCalendar('market')">
+                        <span class="tab-icon">🎪</span>
+                        <span class="tab-text">市集活動</span>
+                    </button>
+                    <button class="calendar-tab" onclick="switchCalendar('lecture')">
+                        <span class="tab-icon">🎓</span>
+                        <span class="tab-text">創業講座</span>
+                    </button>
+                    <button class="calendar-tab" onclick="switchCalendar('meetup')">
+                        <span class="tab-icon">👥</span>
+                        <span class="tab-text">青創聚會</span>
+                    </button>
+                </div>
+                
+                <!-- 載入動畫 -->
+                <div class="loading-spinner" id="loadingSpinner" style="display: none;">
+                    <div class="spinner"></div>
+                    <p>載入活動資訊中...</p>
+                </div>
+                
+                <!-- 活動列表 -->
+                <div class="events-container" id="eventsContainer">
+                    <div class="no-events" id="noEvents" style="display: none;">
+                        <div class="no-events-icon">📅</div>
+                        <p>目前沒有安排活動</p>
                     </div>
                 </div>
             </div>
@@ -1206,12 +1211,19 @@
         }
 
         // 顯示內容
+        // 顯示內容
         function showContent(contentId) {
             hideAllContent();
             document.getElementById(contentId + 'Content').classList.add('active');
             pageStack.push(currentPage);
             currentPage = contentId;
             document.getElementById('backBtn').style.display = 'block';
+            
+            // 如果是最新消息頁面，載入預設日曆
+            if (contentId === 'news') {
+                loadCalendarEvents('market');
+            }
+            
             resetIdleTimer();
         }
 
@@ -1297,7 +1309,7 @@
                 hideAllContent();
                 
                 if (previousPage === 'main') {
-                    document.getElementById('mainMenu').style.display = 'grid';
+                    document.getElementById('mainMenu').style.display = 'flex';
                     document.getElementById('backBtn').style.display = 'none';
                 } else {
                     document.getElementById(previousPage + 'Content').classList.add('active');
@@ -1314,7 +1326,7 @@
         // 回到首頁
         function goHome() {
             hideAllContent();
-            document.getElementById('mainMenu').style.display = 'grid';
+            document.getElementById('mainMenu').style.display = 'flex';
             document.getElementById('backBtn').style.display = 'none';
             pageStack = [];
             currentPage = 'main';
@@ -1344,7 +1356,7 @@
             document.getElementById('mainScreen').classList.remove('active');
             document.getElementById('idleHome').classList.remove('hidden');
             hideAllContent();
-            document.getElementById('mainMenu').style.display = 'grid';
+            document.getElementById('mainMenu').style.display = 'flex';
             document.getElementById('backBtn').style.display = 'none';
             pageStack = [];
             currentPage = 'idle';
@@ -1355,8 +1367,224 @@
         document.addEventListener('touchstart', resetIdleTimer);
         document.getElementById('idleWarning').addEventListener('click', resetIdleTimer);
 
-        // 初始化
-        resetIdleTimer();
+        // 日曆配置 - 請替換成你的真實日曆ID
+        const CALENDAR_CONFIG = {
+            market: 'c_9b4ca67e813fa3bf2c84fb1299bf7d9c32034c9fb570a71bf8bc4f42dacb2e12@group.calendar.google.com',
+            lecture: 'Yc_9b4ca67e813fa3bf2c84fb1299bf7d9c32034c9fb570a71bf8bc4f42dacb2e12@group.calendar.google.com', 
+            meetup: 'c_9b4ca67e813fa3bf2c84fb1299bf7d9c32034c9fb570a71bf8bc4f42dacb2e12@group.calendar.google.com'
+        };
+
+        let currentCalendar = 'market';
+
+        // ICS解析函數
+        function parseICS(icsData) {
+            const events = [];
+            const lines = icsData.split('\n');
+            let currentEvent = null;
+            
+            for (let line of lines) {
+                line = line.trim();
+                
+                if (line === 'BEGIN:VEVENT') {
+                    currentEvent = {};
+                } else if (line === 'END:VEVENT' && currentEvent) {
+                    // 過濾掉過期的活動
+                    if (currentEvent.start && new Date(currentEvent.start) >= new Date()) {
+                        events.push(currentEvent);
+                    }
+                    currentEvent = null;
+                } else if (currentEvent) {
+                    if (line.startsWith('SUMMARY:')) {
+                        currentEvent.title = line.substring(8).replace(/\\,/g, ',').replace(/\\;/g, ';');
+                    } else if (line.startsWith('DTSTART')) {
+                        const dateMatch = line.match(/(\d{8}T?\d{0,6})/);
+                        if (dateMatch) {
+                            currentEvent.start = parseICSDate(dateMatch[1]);
+                        }
+                    } else if (line.startsWith('DTEND')) {
+                        const dateMatch = line.match(/(\d{8}T?\d{0,6})/);
+                        if (dateMatch) {
+                            currentEvent.end = parseICSDate(dateMatch[1]);
+                        }
+                    } else if (line.startsWith('DESCRIPTION:')) {
+                        currentEvent.description = line.substring(12).replace(/\\n/g, '\n').replace(/\\,/g, ',').replace(/\\;/g, ';');
+                    } else if (line.startsWith('LOCATION:')) {
+                        currentEvent.location = line.substring(9).replace(/\\,/g, ',').replace(/\\;/g, ';');
+                    }
+                }
+            }
+            
+            // 按日期排序
+            return events.sort((a, b) => new Date(a.start) - new Date(b.start));
+        }
+
+        // ICS日期解析
+        function parseICSDate(dateStr) {
+            // 格式: 20240728T140000 或 20240728
+            if (dateStr.includes('T')) {
+                const date = dateStr.substring(0, 8);
+                const time = dateStr.substring(9);
+                return new Date(
+                    parseInt(date.substring(0, 4)),
+                    parseInt(date.substring(4, 6)) - 1,
+                    parseInt(date.substring(6, 8)),
+                    parseInt(time.substring(0, 2)) || 0,
+                    parseInt(time.substring(2, 4)) || 0,
+                    parseInt(time.substring(4, 6)) || 0
+                );
+            } else {
+                return new Date(
+                    parseInt(dateStr.substring(0, 4)),
+                    parseInt(dateStr.substring(4, 6)) - 1,
+                    parseInt(dateStr.substring(6, 8))
+                );
+            }
+        }
+
+        // 切換日曆分頁
+        async function switchCalendar(calendarType) {
+            // 更新分頁樣式
+            document.querySelectorAll('.calendar-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.closest('.calendar-tab').classList.add('active');
+            
+            currentCalendar = calendarType;
+            await loadCalendarEvents(calendarType);
+            resetIdleTimer();
+        }
+
+        // 載入日曆活動
+        async function loadCalendarEvents(calendarType) {
+            const container = document.getElementById('eventsContainer');
+            const spinner = document.getElementById('loadingSpinner');
+            const noEvents = document.getElementById('noEvents');
+            
+            // 顯示載入動畫
+            spinner.style.display = 'flex';
+            container.innerHTML = '';
+            noEvents.style.display = 'none';
+            
+            try {
+                const calendarId = CALENDAR_CONFIG[calendarType];
+                const icsUrl = `https://calendar.google.com/calendar/ical/${calendarId}/public/basic.ics`;
+                
+                // 使用代理服務來避免CORS問題
+                const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(icsUrl)}`;
+                
+                const response = await fetch(proxyUrl);
+                if (!response.ok) throw new Error('無法載入日曆資料');
+                
+                const icsData = await response.text();
+                const events = parseICS(icsData);
+                
+                spinner.style.display = 'none';
+                
+                if (events.length === 0) {
+                    noEvents.style.display = 'block';
+                } else {
+                    displayEvents(events);
+                }
+                
+            } catch (error) {
+                console.error('載入日曆失敗:', error);
+                spinner.style.display = 'none';
+                
+                // 顯示錯誤訊息
+                container.innerHTML = `
+                    <div class="no-events">
+                        <div class="no-events-icon">⚠️</div>
+                        <p>載入活動資料失敗，請稍後再試</p>
+                    </div>
+                `;
+            }
+        }
+
+        // 顯示活動列表
+        function displayEvents(events) {
+            const container = document.getElementById('eventsContainer');
+            container.innerHTML = '';
+            
+            events.forEach(event => {
+                const eventElement = createEventElement(event);
+                container.appendChild(eventElement);
+            });
+        }
+
+        // 創建活動元素
+        function createEventElement(event) {
+            const div = document.createElement('div');
+            div.className = 'event-item';
+            
+            const startDate = new Date(event.start);
+            const endDate = event.end ? new Date(event.end) : null;
+            
+            // 提取Meeting連結
+            const meetingLinks = extractMeetingLinks(event.description || '');
+            
+            div.innerHTML = `
+                <div class="event-header">
+                    <div class="event-date">
+                        <span class="day">${startDate.getDate()}</span>
+                        <span class="month">${startDate.getMonth() + 1}月</span>
+                        <span class="time">${formatTime(startDate)}${endDate ? `-${formatTime(endDate)}` : ''}</span>
+                    </div>
+                    <div class="event-info">
+                        <div class="event-title">${event.title || '未命名活動'}</div>
+                        ${event.description ? `<div class="event-description">${formatDescription(event.description)}</div>` : ''}
+                        ${event.location ? `<div class="event-location">📍 ${event.location}</div>` : ''}
+                        ${meetingLinks.length > 0 ? `
+                            <div class="event-links">
+                                ${meetingLinks.map(link => `<a href="${link.url}" class="event-link" target="_blank">${link.text}</a>`).join('')}
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+            
+            return div;
+        }
+
+        // 格式化時間
+        function formatTime(date) {
+            return date.toLocaleTimeString('zh-TW', { 
+                hour: '2-digit', 
+                minute: '2-digit',
+                hour12: false 
+            });
+        }
+
+        // 格式化描述文字
+        function formatDescription(description) {
+            return description
+                .replace(/\n/g, '<br>')
+                .replace(/(https?:\/\/[^\s]+)/g, '')  // 移除連結，因為會單獨處理
+                .substring(0, 200) + (description.length > 200 ? '...' : '');
+        }
+
+        // 提取Meeting連結
+        function extractMeetingLinks(text) {
+            const links = [];
+            const urlRegex = /(https?:\/\/[^\s]+)/g;
+            let match;
+            
+            while ((match = urlRegex.exec(text)) !== null) {
+                const url = match[1];
+                let linkText = '🔗 連結';
+                
+                if (url.includes('meet.google.com') || url.includes('zoom.us')) {
+                    linkText = '📹 線上會議';
+                } else if (url.includes('forms.google.com')) {
+                    linkText = '📝 報名表單';
+                } else if (url.includes('maps.google.com')) {
+                    linkText = '🗺️ 地圖';
+                }
+                
+                links.push({ url, text: linkText });
+            }
+            
+            return links;
+        }
     </script>
 </body>
 </html>
