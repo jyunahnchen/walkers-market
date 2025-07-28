@@ -170,6 +170,65 @@ function returnToIdle() {
     currentPage = 'idle';
 }
 
+// 抓取google candler events
+// 這個函式會在按下按鈕時被呼叫
+
+async function loadEvents(calendarId) {
+  const eventsListDiv = document.getElementById('events-list');
+  eventsListDiv.innerHTML = '正在載入活動...'; // 顯示載入中的訊息
+
+  try {
+    // 呼叫我們自己的 Netlify Function，並透過參數傳遞 calendarId
+    const response = await fetch(`/.netlify/functions/getCalendarEvents?calendarId=${calendarId}`);
+    
+    if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+
+    // 清空載入訊息
+    eventsListDiv.innerHTML = '';
+
+    if (data.items && data.items.length > 0) {
+      // 遍歷回傳的活動並顯示它們
+      data.items.forEach(event => {
+        const eventElement = document.createElement('div');
+        eventElement.classList.add('product-card'); // 沿用現有的卡片樣式
+
+        // 格式化日期時間
+        const startTime = new Date(event.start.dateTime || event.start.date).toLocaleString('zh-TW');
+
+        let eventHTML = `
+          <div class="product-info">
+            <div class="product-title">${event.summary}</div>
+            <div class="product-description">
+              <p><strong>時間：</strong>${startTime}</p>
+              <p>${event.description || ''}</p>
+        `;
+
+        if (event.hangoutLink) {
+          eventHTML += `<p><strong>會議連結：</strong><a href="${event.hangoutLink}" target="_blank">點此加入</a></p>`;
+        }
+        
+        eventHTML += `
+            </div>
+          </div>
+        `;
+
+        eventElement.innerHTML = eventHTML;
+        eventsListDiv.appendChild(eventElement);
+      });
+    } else {
+      eventsListDiv.innerHTML = '目前沒有即將到來的活動。';
+    }
+  } catch (error) {
+    console.error('Error fetching events:', error);
+    eventsListDiv.innerHTML = '無法載入活動，請稍後再試。';
+  }
+}
+
+
 // 監聽用戶交互
 document.addEventListener('click', resetIdleTimer);
 document.addEventListener('touchstart', resetIdleTimer);
