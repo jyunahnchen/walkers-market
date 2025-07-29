@@ -326,7 +326,11 @@ async function loadEvents(calendarId, category) {
                         ${event.description || '暫無活動說明'}
                     </div>
                 `;
-
+                // 檢查活動是否有地點，如果有的話就顯示出來
+               if (event.location) {
+                eventHTML += `<p><strong>地點：</strong>${event.location}</p>`;
+               }
+                // **************************
                 // 如果有 Google Meet 連結
                 if (event.hangoutLink) {
                     eventHTML += `
