@@ -228,6 +228,127 @@ async function loadEvents(calendarId) {
   }
 }
 
+// 抓取google candler events
+// 這個函式會在按下按鈕時被呼叫
+
+// 活動分類配置
+const eventCategories = {
+    meeting: {
+        title: '青創者聚會',
+        calendarId: 'c_a1db12d0b8abc2e662b87dadb124ffe8e150cc882d6a64ed9fddd83e38290d94@group.calendar.google.com',
+        icon: '👥'
+    },
+    workshop: {
+        title: '青創者工作坊',
+        calendarId: 'your-workshop-calendar-id@group.calendar.google.com', // 請替換成實際的 Calendar ID
+        icon: '🛠️'
+    },
+    market: {
+        title: '市集活動',
+        calendarId: 'your-market-calendar-id@group.calendar.google.com', // 請替換成實際的 Calendar ID
+        icon: '🏪'
+    },
+    satellite: {
+        title: '衛星據點活動',
+        calendarId: 'your-satellite-calendar-id@group.calendar.google.com', // 請替換成實際的 Calendar ID
+        icon: '📍'
+    }
+};
+
+// 顯示特定分類的活動
+function showEventCategory(categoryKey) {
+    const category = eventCategories[categoryKey];
+    if (category) {
+        document.getElementById('events-container').style.display = 'block';
+        document.getElementById('events-category-title').textContent = category.title;
+        document.querySelector('.product-grid').style.display = 'none';
+        loadEvents(category.calendarId, category);
+    }
+    resetIdleTimer();
+}
+
+// 隱藏活動列表，返回分類
+function hideEventsList() {
+    document.getElementById('events-container').style.display = 'none';
+    document.querySelector('.product-grid').style.display = 'grid';
+    resetIdleTimer();
+}
+
+// 修改後的載入活動函式
+async function loadEvents(calendarId, category) {
+    const eventsListDiv = document.getElementById('events-list');
+    eventsListDiv.innerHTML = '<div class="loading-spinner">正在載入活動</div>';
+
+    try {
+        const response = await fetch(`/.netlify/functions/getCalendarEvents?calendarId=${calendarId}`);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        eventsListDiv.innerHTML = '';
+
+        if (data.items && data.items.length > 0) {
+            // 將活動卡片以格狀排列
+            eventsListDiv.className = 'events-grid';
+            
+            data.items.forEach(event => {
+                const eventElement = document.createElement('div');
+                eventElement.classList.add('event-card');
+
+                // 格式化日期時間
+                const startDate = new Date(event.start.dateTime || event.start.date);
+                const formattedDate = startDate.toLocaleDateString('zh-TW', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    weekday: 'long'
+                });
+                const formattedTime = event.start.dateTime 
+                    ? startDate.toLocaleTimeString('zh-TW', {
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    })
+                    : '全天';
+
+                // 建立活動卡片內容
+                let eventHTML = `
+                    <div class="event-title">
+                        <span>${category ? category.icon : '📅'}</span>
+                        <span>${event.summary || '未命名活動'}</span>
+                    </div>
+                    <div class="event-date">
+                        <span>📅</span>
+                        <span>${formattedDate} ${formattedTime}</span>
+                    </div>
+                    <div class="event-description">
+                        ${event.description || '暫無活動說明'}
+                    </div>
+                `;
+
+                // 如果有 Google Meet 連結
+                if (event.hangoutLink) {
+                    eventHTML += `
+                        <a href="${event.hangoutLink}" target="_blank" class="event-meet-link">
+                            <span>💻</span>
+                            <span>線上會議連結</span>
+                        </a>
+                    `;
+                }
+
+                eventElement.innerHTML = eventHTML;
+                eventsListDiv.appendChild(eventElement);
+            });
+        } else {
+            eventsListDiv.innerHTML = '<div class="no-events">目前沒有即將到來的活動</div>';
+        }
+    } catch (error) {
+        console.error('Error fetching events:', error);
+        eventsListDiv.innerHTML = '<div class="no-events">無法載入活動，請稍後再試</div>';
+    }
+}
+
 
 // 監聽用戶交互
 document.addEventListener('click', resetIdleTimer);

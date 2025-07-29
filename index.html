@@ -33,6 +33,7 @@
                         <div class="map-image" onclick="showContent('map')"></div>
                     </div>
                     
+
                     <div class="bottom-menu">
                         <div class="bottom-menu-item" onclick="showContent('products')">
                             <div class="bottom-menu-icon">🛍️</div>
@@ -332,7 +333,7 @@
             </div>
         </div>
 
-        <div class="content-page" id="newsContent">
+             <div class="content-page" id="newsContent">
             <div class="page-header">
                 <div>
                     <div class="page-title">📰 最新消息</div>
@@ -341,24 +342,73 @@
             </div>
             <div class="page-content">
                 <div class="product-grid">
-                    <div class="product-card">
-                        <div class="product-image">📅</div>
+                    <div class="product-card event-category-card" onclick="showEventCategory('meeting')">
+                        <div class="product-image">👥</div>
                         <div class="product-info">
-                            <div class="product-title">夏日市集活動</div>
-                            <div class="product-description">7月份各據點聯合舉辦夏日市集，邀請大家一起來體驗在地文化</div>
+                            <div class="product-title">青創者聚會</div>
+                            <div class="product-description">定期舉辦的青創者交流聚會，分享創業經驗、建立人脈網絡，共同成長</div>
                             <div class="product-tags">
-                                <span class="tag">市集</span>
-                                <span class="tag">活動</span>
+                                <span class="tag">交流</span>
+                                <span class="tag">人脈</span>
+                                <span class="tag">分享</span>
                             </div>
                         </div>
-                        <div class="page-content">
-    <button onclick="loadEvents('your-market-calendar-id@group.calendar.google.com')">市集活動</button>
-    <button onclick="loadEvents('your-lecture-calendar-id@group.calendar.google.com')">創業講座</button>
-    <button onclick="loadEvents('c_a1db12d0b8abc2e662b87dadb124ffe8e150cc882d6a64ed9fddd83e38290d94@group.calendar.google.com')">青創者聚會</button>
-    
-    <div id="events-list">
+                    </div>
+                    
+                    <div class="product-card event-category-card" onclick="showEventCategory('workshop')">
+                        <div class="product-image">🛠️</div>
+                        <div class="product-info">
+                            <div class="product-title">青創者工作坊</div>
+                            <div class="product-description">實作型工作坊課程，從品牌經營到數位行銷，提供實用技能培訓</div>
+                            <div class="product-tags">
+                                <span class="tag">實作</span>
+                                <span class="tag">技能</span>
+                                <span class="tag">培訓</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="product-card event-category-card" onclick="showEventCategory('market')">
+                        <div class="product-image">🏪</div>
+                        <div class="product-info">
+                            <div class="product-title">市集活動</div>
+                            <div class="product-description">旅人市集主辦的各式主題市集，展售在地好物，推廣創新產品</div>
+                            <div class="product-tags">
+                                <span class="tag">市集</span>
+                                <span class="tag">展售</span>
+                                <span class="tag">推廣</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="product-card event-category-card" onclick="showEventCategory('satellite')">
+                        <div class="product-image">📍</div>
+                        <div class="product-info">
+                            <div class="product-title">衛星據點活動</div>
+                            <div class="product-description">各衛星據點舉辦的特色活動，體驗在地文化，參與社區營造</div>
+                            <div class="product-tags">
+                                <span class="tag">據點</span>
+                                <span class="tag">在地</span>
+                                <span class="tag">文化</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 活動列表容器 -->
+                <div id="events-container" style="display: none; margin-top: 40px;">
+                    <div class="events-header">
+                        <h3 id="events-category-title">活動列表</h3>
+                        <button class="header-btn" onclick="hideEventsList()">返回分類</button>
+                    </div>
+                    <div id="events-list" class="events-grid">
+                        <!-- 活動內容會動態載入這裡 -->
+                    </div>
+                </div>
+            </div>
         </div>
-</div>
+
+                
                     </div>
                     
                     <div class="product-card">
