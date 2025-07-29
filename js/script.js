@@ -240,17 +240,17 @@ const eventCategories = {
     },
     workshop: {
         title: '青創者工作坊',
-        calendarId: 'your-workshop-calendar-id@group.calendar.google.com', // 請替換成實際的 Calendar ID
+        calendarId: 'c_64edace9f892d2908080bde3aa8ef89a39838e377504d531aa09f1d86e5bcbca@group.calendar.google.com', // 請替換成實際的 Calendar ID
         icon: '🛠️'
     },
     market: {
         title: '市集活動',
-        calendarId: 'your-market-calendar-id@group.calendar.google.com', // 請替換成實際的 Calendar ID
+        calendarId: 'c_6d4e7c09db51abdfa24652ecb4513727a3a79fb966b903e09e6c3d9f66613d22@group.calendar.google.com', // 請替換成實際的 Calendar ID
         icon: '🏪'
     },
     satellite: {
         title: '衛星據點活動',
-        calendarId: 'your-satellite-calendar-id@group.calendar.google.com', // 請替換成實際的 Calendar ID
+        calendarId: 'c_74b96bd3be9a2808eb7f4a22d9fc2adcf8e532c863175a0cf3d944c673afd7ac@group.calendar.google.com', // 請替換成實際的 Calendar ID
         icon: '📍'
     }
 };
