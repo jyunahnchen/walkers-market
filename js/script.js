@@ -33,6 +33,18 @@ function showContent(contentId) {
     currentPage = contentId;
     document.getElementById('backBtn').style.display = 'block';
     resetIdleTimer();
+    
+    // 如果是地圖頁面，確保底部選單顯示
+    if (contentId === 'map') {
+        document.getElementById('mainMenu').style.display = 'flex';
+    }
+}
+
+// 展開地圖
+function expandMap() {
+    const centralHub = document.getElementById('centralHub');
+    centralHub.classList.add('expanded');
+    resetIdleTimer();
 }
 
 // 顯示據點詳情
@@ -107,11 +119,24 @@ function hideAllContent() {
     document.querySelectorAll('.content-page').forEach(page => {
         page.classList.remove('active');
     });
-    document.getElementById('mainMenu').style.display = 'none';
+    
+    // 如果當前頁面是地圖頁面，不要隱藏底部選單
+    if (currentPage !== 'map') {
+        document.getElementById('mainMenu').style.display = 'none';
+    }
 }
 
 // 返回上一頁
 function goBack() {
+    const centralHub = document.getElementById('centralHub');
+    
+    // 如果地圖已展開，先收起地圖
+    if (centralHub.classList.contains('expanded')) {
+        centralHub.classList.remove('expanded');
+        resetIdleTimer();
+        return;
+    }
+    
     if (pageStack.length > 0) {
         const previousPage = pageStack.pop();
         hideAllContent();
@@ -138,6 +163,11 @@ function goHome() {
     document.getElementById('backBtn').style.display = 'none';
     pageStack = [];
     currentPage = 'main';
+    
+    // 收起地圖
+    const centralHub = document.getElementById('centralHub');
+    centralHub.classList.remove('expanded');
+    
     resetIdleTimer();
 }
 
@@ -168,6 +198,12 @@ function returnToIdle() {
     document.getElementById('backBtn').style.display = 'none';
     pageStack = [];
     currentPage = 'idle';
+    
+    // 收起地圖
+    const centralHub = document.getElementById('centralHub');
+    if (centralHub) {
+        centralHub.classList.remove('expanded');
+    }
 }
 
 // 抓取google candler events
@@ -361,3 +397,151 @@ document.getElementById('idleWarning').addEventListener('click', resetIdleTimer)
 
 // 初始化
 resetIdleTimer();
+
+// =================================================================
+// ================= 找產品頁面 (Airtable) 邏輯 ====================
+// =================================================================
+
+let allProducts = []; // 用來緩存從 Airtable 抓回來的所有產品
+let currentFilters = {
+    location: 'all',
+    searchTerm: '',
+    tag: 'all'
+};
+
+// 初始化產品頁面 (當使用者點擊「找產品」時觸發)
+async function initializeProductsPage() {
+    const productContainer = document.getElementById('product-list-container');
+    // 如果尚未抓取過資料，才向 Netlify Function 發出請求
+    if (allProducts.length === 0) {
+        try {
+            // *** 注意：我們需要建立一支名為 getProducts 的新 Netlify Function ***
+            const response = await fetch('/.netlify/functions/getProducts');
+            if (!response.ok) throw new Error('Network response was not ok');
+            
+            const records = await response.json();
+            allProducts = records; // 儲存資料
+            
+            renderTags(); // 根據產品資料產生標籤按鈕
+            renderProducts(); // 渲染所有產品
+
+        } catch (error) {
+            console.error("無法從 Airtable 載入產品:", error);
+            productContainer.innerHTML = '<div class="no-events">產品載入失敗，請稍後再試。</div>';
+        }
+    } else {
+        // 如果已經有資料，直接渲染
+        renderProducts();
+    }
+}
+
+// 根據篩選條件渲染產品卡片
+function renderProducts() {
+    const productContainer = document.getElementById('product-list-container');
+    
+    // 1. 篩選據點
+    let filteredProducts = allProducts.filter(product => 
+        currentFilters.location === 'all' || product.fields['所屬據點'] === currentFilters.location
+    );
+
+    // 2. 篩選關鍵字 (搜尋產品名稱和描述)
+    if (currentFilters.searchTerm) {
+        const searchTerm = currentFilters.searchTerm.toLowerCase();
+        filteredProducts = filteredProducts.filter(product => 
+            (product.fields['產品名稱']?.toLowerCase().includes(searchTerm)) ||
+            (product.fields['產品說明']?.toLowerCase().includes(searchTerm))
+        );
+    }
+
+    // 3. 篩選標籤
+    if (currentFilters.tag !== 'all') {
+        filteredProducts = filteredProducts.filter(product =>
+            product.fields['Tags'] && product.fields['Tags'].includes(currentFilters.tag)
+        );
+    }
+
+    // 產生 HTML
+    productContainer.innerHTML = ''; // 清空容器
+    if (filteredProducts.length > 0) {
+        filteredProducts.forEach(product => {
+            const fields = product.fields;
+            const productCard = document.createElement('div');
+            productCard.className = 'product-card';
+
+            const imageUrl = fields['產品照片'] ? fields['產品照片'][0].thumbnails.large.url : '/images/logo.png';
+            const purchaseLink = fields['導購連結'] || '#';
+
+            productCard.innerHTML = `
+                <div class="product-image" style="background-image: url('${imageUrl}')"></div>
+                <div class="product-info">
+                    <div class="product-title">${fields['產品名稱'] || '未命名產品'}</div>
+                    <div class="product-description">${fields['產品說明'] || '暫無說明'}</div>
+                    <a href="${purchaseLink}" target="_blank" class="event-meet-link" style="background: #fc913a;">前往購買</a>
+                </div>
+            `;
+            productContainer.appendChild(productCard);
+        });
+    } else {
+        productContainer.innerHTML = '<div class="no-events">找不到符合條件的產品。</div>';
+    }
+}
+
+// 動態產生標籤按鈕 (需要您在 Airtable 中新增一個名為 "Tags" 的多選欄位)
+function renderTags() {
+    const tagsContainer = document.getElementById('product-tags-container');
+    const tags = new Set();
+    allProducts.forEach(p => {
+        if (p.fields.Tags) {
+            p.fields.Tags.forEach(tag => tags.add(tag));
+        }
+    });
+
+    tagsContainer.innerHTML = '<button class="filter-btn active" data-tag="all">全部標籤</button>';
+    tags.forEach(tag => {
+        const tagButton = document.createElement('button');
+        tagButton.className = 'filter-btn';
+        tagButton.dataset.tag = tag;
+        tagButton.textContent = tag;
+        tagsContainer.appendChild(tagButton);
+    });
+}
+
+// 設定篩選按鈕的點擊事件
+document.addEventListener('click', function(e) {
+    // 據點和標籤篩選
+    if (e.target.classList.contains('filter-btn')) {
+        const filterType = e.target.dataset.location ? 'location' : 'tag';
+        const filterValue = e.target.dataset.location || e.target.dataset.tag;
+        
+        // 更新當前篩選值
+        currentFilters[filterType] = filterValue;
+
+        // 更新按鈕的 active 狀態
+        const parentContainer = e.target.parentElement;
+        parentContainer.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+        e.target.classList.add('active');
+        
+        renderProducts(); // 重新渲染產品
+    }
+});
+
+// 設定搜尋框的輸入事件
+document.addEventListener('DOMContentLoaded', function() {
+    const searchBar = document.getElementById('product-search-bar');
+    if (searchBar) {
+        searchBar.addEventListener('input', function(e) {
+            currentFilters.searchTerm = e.target.value;
+            renderProducts(); // 重新渲染產品
+        });
+    }
+});
+
+// ***** 修改原本的 showContent 函式 *****
+// 我們需要在點擊「找產品」時，觸發我們的初始化函式
+const originalShowContent = showContent; // 保存原始函式
+showContent = function(contentId) {
+    originalShowContent(contentId); // 呼叫原始函式
+    if (contentId === 'products') {
+        initializeProductsPage(); // 如果是產品頁，就執行初始化
+    }
+};

@@ -1,0 +1,22 @@
+{
+  "name": "walkers-market",
+  "version": "1.0.0",
+  "description": "旅人市集多媒體導覽平台",
+  "main": "index.html",
+  "scripts": {
+    "dev": "netlify dev",
+    "build": "echo 'No build step required'"
+  },
+  "dependencies": {
+    "airtable": "^0.12.2"
+  },
+  "devDependencies": {},
+  "keywords": [
+    "market",
+    "tourism",
+    "multimedia",
+    "guide"
+  ],
+  "author": "旅人市集團隊",
+  "license": "MIT"
+}

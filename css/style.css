@@ -7,7 +7,7 @@
 body {
     font-family: 'Noto Sans TC', sans-serif;
     overflow: hidden;
-    background: #1a1a1a;
+    background: #000000;
     touch-action: manipulation;
     user-select: none;
 }
@@ -380,24 +380,37 @@ body {
     transform: translate(-50%, -50%);
     width: 200px;
     height: 200px;
-    background: linear-gradient(45deg, #8B4513, #FF8C00);
+    background: url('/images/rotating_planet.gif') center/contain no-repeat;
     border-radius: 50%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.5s ease;
     box-shadow: 0 10px 30px rgba(0,0,0,0.2);
     color: white;
     font-weight: 600;
     font-size: 1.2rem;
     text-align: center;
+    z-index: 10;
 }
 
 .central-hub:hover {
     transform: translate(-50%, -50%) scale(1.1);
     box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+}
+
+.central-hub.expanded + .satellite-point,
+.central-hub.expanded ~ .satellite-point {
+    opacity: 1;
+    transform: scale(1);
+    pointer-events: auto;
+}
+
+.central-hub.expanded ~ .connection-line {
+    opacity: 0.8;
+    transform: scaleX(1);
 }
 
 .satellite-point {
@@ -411,36 +424,117 @@ body {
     justify-content: center;
     align-items: center;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.5s ease;
     box-shadow: 0 5px 20px rgba(0,0,0,0.2);
     color: white;
     font-weight: 500;
     font-size: 0.9rem;
     text-align: center;
+    opacity: 0;
+    transform: scale(0.5);
+    pointer-events: none;
 }
 
 .satellite-point:hover {
     transform: scale(1.2);
     box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    background: linear-gradient(45deg, #FF8C00, #FFD700);
 }
 
-.satellite-point.point1 { top: 20px; left: 50%; transform: translateX(-50%); }
-.satellite-point.point2 { top: 50%; right: 20px; transform: translateY(-50%); }
-.satellite-point.point3 { bottom: 20px; left: 50%; transform: translateX(-50%); }
-.satellite-point.point4 { top: 50%; left: 20px; transform: translateY(-50%); }
+.satellite-point.point1 { 
+    top: 20px; 
+    left: 50%; 
+    transform: translateX(-50%) scale(0.5); 
+    transition-delay: 0.1s;
+}
+.satellite-point.point2 { 
+    top: 50%; 
+    right: 20px; 
+    transform: translateY(-50%) scale(0.5); 
+    transition-delay: 0.2s;
+}
+.satellite-point.point3 { 
+    bottom: 20px; 
+    left: 50%; 
+    transform: translateX(-50%) scale(0.5); 
+    transition-delay: 0.3s;
+}
+.satellite-point.point4 { 
+    top: 50%; 
+    left: 20px; 
+    transform: translateY(-50%) scale(0.5); 
+    transition-delay: 0.4s;
+}
+
+.central-hub.expanded ~ .satellite-point.point1 {
+    transform: translateX(-50%) scale(1);
+}
+.central-hub.expanded ~ .satellite-point.point2 {
+    transform: translateY(-50%) scale(1);
+}
+.central-hub.expanded ~ .satellite-point.point3 {
+    transform: translateX(-50%) scale(1);
+}
+.central-hub.expanded ~ .satellite-point.point4 {
+    transform: translateY(-50%) scale(1);
+}
 
 .connection-line {
     position: absolute;
     height: 2px;
     background: linear-gradient(90deg, #8B4513, #2E8B57);
-    opacity: 0.3;
+    opacity: 0;
     pointer-events: none;
+    transform: scaleX(0);
+    transition: all 0.5s ease;
+    transform-origin: center;
 }
 
-.line1 { width: 200px; top: 120px; left: 50%; transform: translateX(-50%); }
-.line2 { width: 200px; right: 120px; top: 50%; transform: translateY(-50%); }
-.line3 { width: 200px; bottom: 120px; left: 50%; transform: translateX(-50%); }
-.line4 { width: 200px; left: 120px; top: 50%; transform: translateY(-50%); }
+.line1 { 
+    width: 200px; 
+    top: 120px; 
+    left: 50%; 
+    transform: translateX(-50%) scaleX(0); 
+    transition-delay: 0.1s;
+}
+.line2 { 
+    width: 200px; 
+    right: 120px; 
+    top: 50%; 
+    transform: translateY(-50%) scaleX(0); 
+    transition-delay: 0.2s;
+}
+.line3 { 
+    width: 200px; 
+    bottom: 120px; 
+    left: 50%; 
+    transform: translateX(-50%) scaleX(0); 
+    transition-delay: 0.3s;
+}
+.line4 { 
+    width: 200px; 
+    left: 120px; 
+    top: 50%; 
+    transform: translateY(-50%) scaleX(0); 
+    transition-delay: 0.4s;
+}
+
+.central-hub.expanded ~ .connection-line.line1 {
+    transform: translateX(-50%) scaleX(1);
+    opacity: 0.8;
+}
+.central-hub.expanded ~ .connection-line.line2 {
+    transform: translateY(-50%) scaleX(1);
+    opacity: 0.8;
+}
+.central-hub.expanded ~ .connection-line.line3 {
+    transform: translateX(-50%) scaleX(1);
+    opacity: 0.8;
+}
+.central-hub.expanded ~ .connection-line.line4 {
+    transform: translateY(-50%) scaleX(1);
+    opacity: 0.8;
+}
 
 /* 產品網格 - 統一樣式 */
 .product-grid {
@@ -794,6 +888,82 @@ body {
     to { transform: rotate(360deg); }
 }
 
+/* ========== 產品篩選器 CSS ========== */
+
+.product-filters-container {
+    background: rgba(0,0,0,0.2);
+    padding: 20px;
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+}
+
+.filter-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    flex-wrap: wrap; /* 允許換行 */
+}
+
+.filter-group:last-child {
+    margin-bottom: 0;
+}
+
+.filter-label {
+    color: white;
+    font-weight: 500;
+    margin-right: 15px;
+    font-size: 1.1rem;
+    flex-shrink: 0; /* 防止文字被壓縮 */
+}
+
+.filter-options {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap; /* 允許換行 */
+}
+
+.filter-btn {
+    padding: 8px 18px;
+    border: 2px solid rgba(255,255,255,0.4);
+    background-color: transparent;
+    color: rgba(255,255,255,0.8);
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.filter-btn:hover {
+    background-color: rgba(255,255,255,0.2);
+    border-color: rgba(255,255,255,0.8);
+    color: white;
+}
+
+.filter-btn.active {
+    background-color: white;
+    border-color: white;
+    color: #8B4513; /* 使用主題色 */
+    font-weight: 700;
+}
+
+.search-bar {
+    padding: 10px 15px;
+    border: 2px solid rgba(255,255,255,0.4);
+    background-color: rgba(0,0,0,0.3);
+    color: white;
+    border-radius: 20px;
+    font-size: 1rem;
+    width: 300px;
+    transition: all 0.3s ease;
+}
+
+.search-bar:focus {
+    outline: none;
+    border-color: white;
+    background-color: rgba(0,0,0,0.5);
+}
+
 /* 響應式設計 */
 @media (max-width: 1024px) {
     .main-menu {
@@ -859,5 +1029,20 @@ body {
     
     .bottom-menu-item {
         min-width: calc(50% - 10px);
+    }
+    
+    .search-bar {
+        width: 100%;
+        max-width: 300px;
+    }
+    
+    .filter-group {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .filter-label {
+        margin-bottom: 10px;
+        margin-right: 0;
     }
 }

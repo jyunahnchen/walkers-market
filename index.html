@@ -68,7 +68,7 @@
             <div class="page-header">
                 <div>
                     <div class="page-title">🗺️ 展區互動地圖</div>
-                    <div class="page-subtitle">探索旅人市集培育站與四大衛星據點</div>
+                    <div class="page-subtitle">旅人市集培育站（核心）與四大衛星據點</div>
                 </div>
             </div>
             <div class="page-content">
@@ -79,34 +79,36 @@
                         <div class="connection-line line3"></div>
                         <div class="connection-line line4"></div>
                         
-                        <div class="central-hub" onclick="showLocation('main')">
-                            <div>🏛️</div>
-                            <div>旅人市集</div>
-                            <div>培育站</div>
+                        <div class="central-hub" id="centralHub" onclick="expandMap()">
+                            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; z-index: 5;">
+                                <div style="font-size: 1.5rem; margin-bottom: 5px;">🏛️</div>
+                                <div style="font-size: 1rem; font-weight: 600;">旅人市集</div>
+                                <div style="font-size: 0.9rem;">培育站（核心）</div>
+                            </div>
                         </div>
                         
                         <div class="satellite-point point1" onclick="showLocation('shuilin')">
-                            <div>🌊</div>
-                            <div>水林</div>
-                            <div>雲林海青</div>
+                            <div style="font-size: 1.5rem; margin-bottom: 5px;">🌊</div>
+                            <div style="font-size: 1rem; font-weight: 600;">水林</div>
+                            <div style="font-size: 0.8rem;">雲林海青</div>
                         </div>
                         
                         <div class="satellite-point point2" onclick="showLocation('dalin')">
-                            <div>🏔️</div>
-                            <div>大林</div>
-                            <div>雪香亭</div>
+                            <div style="font-size: 1.5rem; margin-bottom: 5px;">🏔️</div>
+                            <div style="font-size: 1rem; font-weight: 600;">大林</div>
+                            <div style="font-size: 0.8rem;">雪香亭</div>
                         </div>
                         
                         <div class="satellite-point point3" onclick="showLocation('liujiao')">
-                            <div>☕</div>
-                            <div>六腳</div>
-                            <div>鉛花咖啡</div>
+                            <div style="font-size: 1.5rem; margin-bottom: 5px;">☕</div>
+                            <div style="font-size: 1rem; font-weight: 600;">六腳</div>
+                            <div style="font-size: 0.8rem;">鉛花咖啡</div>
                         </div>
                         
                         <div class="satellite-point point4" onclick="showLocation('kouhu')">
-                            <div>🐲</div>
-                            <div>口湖</div>
-                            <div>成龍捌貳</div>
+                            <div style="font-size: 1.5rem; margin-bottom: 5px;">🐲</div>
+                            <div style="font-size: 1rem; font-weight: 600;">口湖</div>
+                            <div style="font-size: 0.8rem;">成龍捌貳</div>
                         </div>
                     </div>
                 </div>
@@ -175,62 +177,39 @@
             <div class="page-header">
                 <div>
                     <div class="page-title">🛍️ 找產品</div>
-                    <div class="page-subtitle">探索各據點的精選商品</div>
+                    <div class="page-subtitle">探索所有據點的特色商品</div>
                 </div>
             </div>
             <div class="page-content">
-                <div class="product-grid">
-                    <div class="product-card">
-                        <div class="product-image">🌾</div>
-                        <div class="product-info">
-                            <div class="product-title">有機稻米</div>
-                            <div class="product-description">來自水林在地小農的有機栽培稻米，無農藥、無化肥，保留天然香甜</div>
-                            <div class="product-tags">
-                                <span class="tag">農產</span>
-                                <span class="tag">有機</span>
-                                <span class="tag">水林</span>
-                            </div>
+                <div class="product-filters-container">
+                    <div class="filter-group">
+                        <span class="filter-label">據點：</span>
+                        <div class="filter-options">
+                            <button class="filter-btn active" data-location="all">全部據點</button>
+                            <button class="filter-btn" data-location="旅人市集培育站">培育站</button>
+                            <button class="filter-btn" data-location="水林・雲林海青">水林</button>
+                            <button class="filter-btn" data-location="大林・雪香亭">大林</button>
+                            <button class="filter-btn" data-location="六腳・鉛花咖啡">六腳</button>
+                            <button class="filter-btn" data-location="口湖・成龍捌貳">口湖</button>
                         </div>
+                    </div>
+
+                    <div class="filter-group">
+                        <span class="filter-label">搜尋：</span>
+                        <input type="search" id="product-search-bar" class="search-bar" placeholder="輸入產品名稱、描述...">
                     </div>
                     
-                    <div class="product-card">
-                        <div class="product-image">☕</div>
-                        <div class="product-info">
-                            <div class="product-title">手沖咖啡豆</div>
-                            <div class="product-description">鉛花咖啡精選阿里山咖啡豆，手工烘焙，層次豐富</div>
-                            <div class="product-tags">
-                                <span class="tag">飲品</span>
-                                <span class="tag">手作</span>
-                                <span class="tag">六腳</span>
+                    <div class="filter-group">
+                        <span class="filter-label">標籤：</span>
+                        <div class="filter-options" id="product-tags-container">
                             </div>
-                        </div>
                     </div>
-                    
-                    <div class="product-card">
-                        <div class="product-image">🍵</div>
-                        <div class="product-info">
-                            <div class="product-title">雪香亭茶葉</div>
-                            <div class="product-description">大林在地茶園的高山茶，甘醇回甘，是茶葉愛好者的首選</div>
-                            <div class="product-tags">
-                                <span class="tag">茶葉</span>
-                                <span class="tag">高山</span>
-                                <span class="tag">大林</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="product-card">
-                        <div class="product-image">🎨</div>
-                        <div class="product-info">
-                            <div class="product-title">在地手工藝品</div>
-                            <div class="product-description">成龍捌貳工作坊的手工藝品，結合傳統技藝與現代設計</div>
-                            <div class="product-tags">
-                                <span class="tag">手工</span>
-                                <span class="tag">藝品</span>
-                                <span class="tag">口湖</span>
-                            </div>
-                        </div>
-                    </div>
+                </div>
+
+                <hr style="margin: 30px 0; border-color: rgba(255,255,255,0.2);">
+
+                <div class="product-grid" id="product-list-container">
+                    <div class="loading-spinner">正在從 Airtable 載入產品...</div>
                 </div>
             </div>
         </div>
