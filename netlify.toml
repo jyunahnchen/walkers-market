@@ -1,2 +1,12 @@
 [build]
   functions = "netlify/functions"
+
+[functions]
+  node_bundler = "esbuild"
+  external_node_modules = ["airtable"]
+
+[functions."getProducts"]
+  included_files = []
+
+[functions."getCalendarEvents"]
+  included_files = []
