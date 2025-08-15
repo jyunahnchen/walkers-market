@@ -441,104 +441,55 @@ async function initializeProductsPage() {
     }
 }
 
-// 根據篩選條件渲染產品卡片（新版）
+// 根據篩選條件渲染產品卡片
 function renderProducts() {
-  const productContainer = document.getElementById('product-list-container');
+    const productContainer = document.getElementById('product-list-container');
+    
+    // 1. 篩選據點
+    let filteredProducts = allProducts.filter(product => 
+        currentFilters.location === 'all' || product.fields['所屬據點'] === currentFilters.location
+    );
 
-  // 1) 據點篩選
-  let filtered = allProducts.filter(p =>
-    currentFilters.location === 'all' || p.fields['所屬據點'] === currentFilters.location
-  );
-
-  // 2) 搜尋（名稱 + 說明）
-  if (currentFilters.searchTerm) {
-    const q = currentFilters.searchTerm.toLowerCase();
-    filtered = filtered.filter(p => {
-      const name = (p.fields['產品名稱'] || '').toString().toLowerCase();
-      const desc = toPlainText(p.fields['產品說明']).toLowerCase();
-      return name.includes(q) || desc.includes(q);
-    });
-  }
-
-  // 3) 標籤
-  if (currentFilters.tag !== 'all') {
-    filtered = filtered.filter(p => p.fields['Tags'] && p.fields['Tags'].includes(currentFilters.tag));
-  }
-
-  productContainer.innerHTML = '';
-
-  if (filtered.length === 0) {
-    productContainer.innerHTML = '<div class="no-events">找不到符合條件的產品。</div>';
-    return;
-  }
-
-  filtered.forEach(p => {
-    const f = p.fields || {};
-
-    // 取第一張圖片（若無則給預設）
-    const photo =
-      (Array.isArray(f['產品照片']) && f['產品照片'][0]?.url) ||
-      (Array.isArray(f['產品照片']) && f['產品照片'][0]?.thumbnails?.large?.url) ||
-      '/images/logo.png';
-
-    // 欄位：名稱、據點、說明、規格、連結
-    const name = f['產品名稱'] || '未命名產品';
-    const site = f['所屬據點'] || '未指定據點';
-    const desc = toPlainText(f['產品說明']) || '暫無說明';
-    const spec = toPlainText(f['產品規格'] ?? f['規格'] ?? f['規格說明']) || '—';
-    const link = f['導購連結'] || f['連結'] || '#';
-
-    // 卡片 DOM
-    const card = document.createElement('div');
-    card.className = 'product-card';
-
-    card.innerHTML = `
-      <img class="product-photo" src="${photo}" alt="${name}">
-      <div class="product-info">
-        <div class="product-field"><b>據點：</b><span class="clamp-1">${escapeHTML(site)}</span></div>
-        <div class="product-field"><b>產品：</b><span class="clamp-2">${escapeHTML(name)}</span></div>
-        <div class="product-field"><b>說明：</b><span class="clamp-3">${escapeHTML(desc)}</span></div>
-        <div class="product-field"><b>規格：</b><span class="clamp-2">${escapeHTML(spec)}</span></div>
-        <div class="product-actions">
-          <a class="buy-link" href="${link}" target="_blank" rel="noopener">前往連結</a>
-        </div>
-      </div>
-    `;
-    productContainer.appendChild(card);
-  });
-
-  // 工具：把 Rich text/array/object 轉成可讀字串
-  function toPlainText(v) {
-    if (v == null) return '';
-    if (typeof v === 'string') return v;
-    if (Array.isArray(v)) {
-      // Airtable 多選/多附件可能是 array
-      return v.map(item => {
-        if (typeof item === 'string') return item;
-        if (item && typeof item === 'object') {
-          return item.name || item.url || JSON.stringify(item);
-        }
-        return String(item);
-      }).join('、');
+    // 2. 篩選關鍵字 (搜尋產品名稱和描述)
+    if (currentFilters.searchTerm) {
+        const searchTerm = currentFilters.searchTerm.toLowerCase();
+        filteredProducts = filteredProducts.filter(product => 
+            (product.fields['產品名稱']?.toLowerCase().includes(searchTerm)) ||
+            (product.fields['產品說明']?.toLowerCase().includes(searchTerm))
+        );
     }
-    if (typeof v === 'object') {
-      // RTF 或 JSON 物件 -> 嘗試抓常見屬性
-      if ('text' in v && typeof v.text === 'string') return v.text;
-      if ('plain_text' in v && typeof v.plain_text === 'string') return v.plain_text;
-      return JSON.stringify(v);
-    }
-    return String(v);
-  }
 
-  // 工具：避免 XSS/亂碼
-  function escapeHTML(s) {
-    return String(s)
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&#039;');
-  }
+    // 3. 篩選標籤
+    if (currentFilters.tag !== 'all') {
+        filteredProducts = filteredProducts.filter(product =>
+            product.fields['Tags'] && product.fields['Tags'].includes(currentFilters.tag)
+        );
+    }
+
+    // 產生 HTML
+    productContainer.innerHTML = ''; // 清空容器
+    if (filteredProducts.length > 0) {
+        filteredProducts.forEach(product => {
+            const fields = product.fields;
+            const productCard = document.createElement('div');
+            productCard.className = 'product-card';
+
+            const imageUrl = fields['產品照片'] ? fields['產品照片'][0].thumbnails.large.url : '/images/logo.png';
+            const purchaseLink = fields['導購連結'] || '#';
+
+            productCard.innerHTML = `
+                <div class="product-image" style="background-image: url('${imageUrl}')"></div>
+                <div class="product-info">
+                    <div class="product-title">${fields['產品名稱'] || '未命名產品'}</div>
+                    <div class="product-description">${fields['產品說明'] || '暫無說明'}</div>
+                    <a href="${purchaseLink}" target="_blank" class="event-meet-link" style="background: #fc913a;">前往購買</a>
+                </div>
+            `;
+            productContainer.appendChild(productCard);
+        });
+    } else {
+        productContainer.innerHTML = '<div class="no-events">找不到符合條件的產品。</div>';
+    }
 }
 
 // 動態產生標籤按鈕 (需要您在 Airtable 中新增一個名為 "Tags" 的多選欄位)
