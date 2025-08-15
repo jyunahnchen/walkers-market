@@ -417,9 +417,15 @@ async function initializeProductsPage() {
         try {
             // *** 注意：我們需要建立一支名為 getProducts 的新 Netlify Function ***
             const response = await fetch('/.netlify/functions/getProducts');
-            if (!response.ok) throw new Error('Network response was not ok');
+            
+            if (!response.ok) {
+                const errorData = await response.json();
+                console.error("API Error:", errorData);
+                throw new Error(`API Error: ${errorData.message || response.statusText}`);
+            }
             
             const records = await response.json();
+            console.log("Products loaded:", records);
             allProducts = records; // 儲存資料
             
             renderTags(); // 根據產品資料產生標籤按鈕
@@ -427,7 +433,7 @@ async function initializeProductsPage() {
 
         } catch (error) {
             console.error("無法從 Airtable 載入產品:", error);
-            productContainer.innerHTML = '<div class="no-events">產品載入失敗，請稍後再試。</div>';
+            productContainer.innerHTML = `<div class="no-events">產品載入失敗：${error.message}</div>`;
         }
     } else {
         // 如果已經有資料，直接渲染
