@@ -544,6 +544,22 @@ body {
     margin-top: 20px;
 }
 
+
+/* 找服務 & 最新消息 共用卡片樣式 */
+.service-news-card {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+.service-news-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+}
+
+/* 找產品專用卡片樣式 */
 .product-card {
     background: white;
     border-radius: 15px;
