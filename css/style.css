@@ -1062,3 +1062,29 @@ body {
         margin-right: 0;
     }
 }
+
+/* ========== 找產品頁面卡片固定大小 ========== */
+#product-list-container.product-grid {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+#product-list-container .product-card {
+    height: 350px; 
+    display: flex;
+    flex-direction: column;
+}
+
+#product-list-container .product-info {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+#product-list-container .product-description {
+    flex-grow: 1;
+    overflow: hidden;
+}
+
+#product-list-container .event-meet-link {
+    margin-top: auto; 
+}
