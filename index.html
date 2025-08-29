@@ -1,448 +1,249 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>旅人市集多媒體導覽平台</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap">
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>旅人市集多媒體導覽平台</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap">
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <div class="container">
-        <div class="idle-home" id="idleHome">
-            <div class="background-video"></div>
-            <div class="lang-selector">
-                </div>
-            <div class="main-logo"></div>
-            <div class="tagline">創生互動平台・在地青年聚點</div>
-            <button class="enter-portal" onclick="enterMainScreen()">
-                <span>點選探索旅程</span>
-            </button>
-        </div>
-
-        <div class="main-screen" id="mainScreen">
-            <div class="header">
-                <div class="header-logo">🌟 旅人市集導覽平台</div>
-                <div class="header-controls">
-                    </div>
-            </div>
-
-            <div class="content-area">
-                <div class="main-menu" id="mainMenu">
-                    <div class="map-section">
-                        <div class="map-image" onclick="showContent('map')"></div>
-                    </div>
-                    
-
-                    <div class="bottom-menu">
-                        <div class="bottom-menu-item" onclick="showContent('products')">
-                            <div class="bottom-menu-icon">🛍️</div>
-                            <div class="bottom-menu-title">找產品</div>
-                        </div>
-                        
-                        <div class="bottom-menu-item" onclick="showContent('services')">
-                            <div class="bottom-menu-icon">💬</div>
-                            <div class="bottom-menu-title">找服務</div>
-                        </div>
-                        
-                        <div class="bottom-menu-item" onclick="showContent('news')">
-                            <div class="bottom-menu-icon">📰</div>
-                            <div class="bottom-menu-title">最新消息</div>
-                        </div>
-                        
-                        <div class="bottom-menu-item" onclick="showContent('media')">
-                            <div class="bottom-menu-icon">🎥</div>
-                            <div class="bottom-menu-title">多媒體專區</div>
-                        </div>
-                        
-                        <div class="bottom-menu-item" onclick="showContent('about')">
-                            <div class="bottom-menu-icon">📖</div>
-                            <div class="bottom-menu-title">關於我們</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="content-page" id="mapContent">
-            <div class="page-header">
-                <div>
-                    <div class="page-title">🗺️ 展區互動地圖</div>
-                    <div class="page-subtitle">旅人市集培育站（核心）與四大衛星據點</div>
-                </div>
-            </div>
-            <div class="page-content">
-                <div class="interactive-map">
-                    <div class="map-container">
-                        <div class="connection-line line1"></div>
-                        <div class="connection-line line2"></div>
-                        <div class="connection-line line3"></div>
-                        <div class="connection-line line4"></div>
-                        
-                        <div class="central-hub" id="centralHub" onclick="expandMap()">
-                            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; z-index: 5;">
-                                <div style="font-size: 1.5rem; margin-bottom: 5px;">🏛️</div>
-                                <div style="font-size: 1rem; font-weight: 600;">旅人市集</div>
-                                <div style="font-size: 0.9rem;">培育站（核心）</div>
-                            </div>
-                        </div>
-                        
-                        <div class="satellite-point point1" onclick="showLocation('shuilin')">
-                            <div style="font-size: 1.5rem; margin-bottom: 5px;">🌊</div>
-                            <div style="font-size: 1rem; font-weight: 600;">水林</div>
-                            <div style="font-size: 0.8rem;">雲林海青</div>
-                        </div>
-                        
-                        <div class="satellite-point point2" onclick="showLocation('dalin')">
-                            <div style="font-size: 1.5rem; margin-bottom: 5px;">🏔️</div>
-                            <div style="font-size: 1rem; font-weight: 600;">大林</div>
-                            <div style="font-size: 0.8rem;">雪香亭</div>
-                        </div>
-                        
-                        <div class="satellite-point point3" onclick="showLocation('liujiao')">
-                            <div style="font-size: 1.5rem; margin-bottom: 5px;">☕</div>
-                            <div style="font-size: 1rem; font-weight: 600;">六腳</div>
-                            <div style="font-size: 0.8rem;">鉛花咖啡</div>
-                        </div>
-                        
-                        <div class="satellite-point point4" onclick="showLocation('kouhu')">
-                            <div style="font-size: 1.5rem; margin-bottom: 5px;">🐲</div>
-                            <div style="font-size: 1rem; font-weight: 600;">口湖</div>
-                            <div style="font-size: 0.8rem;">成龍捌貳</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="content-page" id="locationContent">
-            <div class="page-header">
-                <div>
-                    <div class="page-title" id="locationTitle">據點詳情</div>
-                    <div class="page-subtitle" id="locationSubtitle">據點介紹與服務資訊</div>
-                </div>
-            </div>
-            <div class="page-content">
-                <div class="location-detail">
-                    <div class="location-hero" id="locationHero">
-                        據點封面圖片區域
-                    </div>
-                    
-                    <div class="location-sections">
-                        <div class="section-card">
-                            <div class="section-title">
-                                <span>🧭</span>
-                                <span>據點介紹</span>
-                            </div>
-                            <div class="section-content" id="locationIntro">
-                                據點故事、背景、所屬區域、營運團隊等詳細介紹...
-                            </div>
-                        </div>
-                        
-                        <div class="section-card">
-                            <div class="section-title">
-                                <span>🛍️</span>
-                                <span>商品與服務</span>
-                            </div>
-                            <div class="section-content" id="locationServices">
-                                提供的商品、服務內容、導覽資訊等...
-                            </div>
-                        </div>
-                        
-                        <div class="section-card">
-                            <div class="section-title">
-                                <span>📍</span>
-                                <span>周邊推薦</span>
-                            </div>
-                            <div class="section-content" id="locationNearby">
-                                附近景點、店家介紹，結合地圖定位...
-                            </div>
-                        </div>
-                        
-                        <div class="section-card">
-                            <div class="section-title">
-                                <span>📱</span>
-                                <span>聯絡資訊</span>
-                            </div>
-                            <div class="section-content" id="locationContact">
-                                QR code、IG、FB、地址資訊等聯絡方式...
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="content-page" id="productsContent">
-            <div class="page-header">
-                <div>
-                    <div class="page-title">🛍️ 找產品</div>
-                    <div class="page-subtitle">探索所有據點的特色商品</div>
-                </div>
-            </div>
-            <div class="page-content">
-                <div class="product-filters-container">
-                    <div class="filter-group">
-                        <span class="filter-label">據點：</span>
-                        <div class="filter-options">
-                            <button class="filter-btn active" data-location="all">全部據點</button>
-                            <button class="filter-btn" data-location="旅人市集培育站">培育站</button>
-                            <button class="filter-btn" data-location="水林・雲林海青">水林</button>
-                            <button class="filter-btn" data-location="大林・雪香亭">大林</button>
-                            <button class="filter-btn" data-location="六腳・鉛花咖啡">六腳</button>
-                            <button class="filter-btn" data-location="口湖・成龍捌貳">口湖</button>
-                        </div>
-                    </div>
-
-                    <div class="filter-group">
-                        <span class="filter-label">搜尋：</span>
-                        <input type="search" id="product-search-bar" class="search-bar" placeholder="輸入產品名稱、描述...">
-                    </div>
-                    
-                    <div class="filter-group">
-                        <span class="filter-label">標籤：</span>
-                        <div class="filter-options" id="product-tags-container">
-                            </div>
-                    </div>
-                </div>
-
-                <hr style="margin: 30px 0; border-color: rgba(255,255,255,0.2);">
-
-                <div class="product-grid" id="product-list-container">
-                    <div class="loading-spinner">正在從 Airtable 載入產品...</div>
-                </div>
-            </div>
-        </div>
-
-        <div class="content-page" id="mediaContent">
-            <div class="page-header">
-                <div>
-                    <div class="page-title">🎥 多媒體專區</div>
-                    <div class="page-subtitle">影片故事、活動照片與音聲內容</div>
-                </div>
-            </div>
-            <div class="page-content">
-                <div class="media-player">
-                    <div class="video-container">
-                        🎬 影片播放區域<br>
-                        <small>支援 YouTube、Vimeo 或本地影片檔案</small>
-                    </div>
-                    <div class="video-info">
-                        <div class="video-title">旅人市集創生故事</div>
-                        <div class="video-description">
-                            透過影像記錄，了解在地青年如何透過旅人市集平台，結合傳統文化與現代創新，
-                            為地方帶來新的生命力，創造永續的在地經濟模式。
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="product-grid">
-                    <div class="product-card">
-                        <div class="product-image">📸</div>
-                        <div class="product-info">
-                            <div class="product-title">活動照片牆</div>
-                            <div class="product-description">各據點舉辦的活動精彩瞬間，按主題分類展示</div>
-                            <div class="product-tags">
-                                <span class="tag">相片</span>
-                                <span class="tag">活動</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="product-card">
-                        <div class="product-image">🎙️</div>
-                        <div class="product-info">
-                            <div class="product-title">創業者訪談</div>
-                            <div class="product-description">Podcast 訪談內容，分享創業心路歷程</div>
-                            <div class="product-tags">
-                                <span class="tag">音頻</span>
-                                <span class="tag">訪談</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="content-page" id="servicesContent">
-            <div class="page-header">
-                <div>
-                    <div class="page-title">💬 找服務</div>
-                    <div class="page-subtitle">場租、導覽、工作坊等服務介紹</div>
-                </div>
-            </div>
-            <div class="page-content">
-                <div class="product-grid">
-                    <div class="service-news-card">
-                        <div class="product-image">🏢</div>
-                        <div class="product-info">
-                            <div class="product-title">場地租借</div>
-                            <div class="product-description">提供多功能空間租借服務，適合會議、活動、展覽使用</div>
-                            <div class="product-tags">
-                                <span class="tag">場租</span>
-                                <span class="tag">活動</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="service-news-card">
-                        <div class="product-image">🗺️</div>
-                        <div class="product-info">
-                            <div class="product-title">導覽服務</div>
-                            <div class="product-description">專業導覽員帶領深度探索各據點文化與故事</div>
-                            <div class="product-tags">
-                                <span class="tag">導覽</span>
-                                <span class="tag">文化</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    
-                </div>
-            </div>
-        </div>
-
-             <div class="content-page" id="newsContent">
-            <div class="page-header">
-                <div>
-                    <div class="page-title">📰 最新消息</div>
-                    <div class="page-subtitle">市集活動、講座與共創成果</div>
-                </div>
-            </div>
-            <div class="page-content">
-                <div class="product-grid">
-                    <div class="service-news-card event-category-card" onclick="showEventCategory('meeting')">
-                        <div class="product-image">👥</div>
-                        <div class="product-info">
-                            <div class="product-title">青創者聚會</div>
-                            <div class="product-description">定期舉辦的青創者交流聚會，分享創業經驗、建立人脈網絡，共同成長</div>
-                            <div class="product-tags">
-                                <span class="tag">交流</span>
-                                <span class="tag">人脈</span>
-                                <span class="tag">分享</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="service-news-card event-category-card" onclick="showEventCategory('workshop')">
-                        <div class="product-image">🛠️</div>
-                        <div class="product-info">
-                            <div class="product-title">青創者工作坊</div>
-                            <div class="product-description">實作型工作坊課程，從品牌經營到數位行銷，提供實用技能培訓</div>
-                            <div class="product-tags">
-                                <span class="tag">實作</span>
-                                <span class="tag">技能</span>
-                                <span class="tag">培訓</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="service-news-card event-category-card" onclick="showEventCategory('market')">
-                        <div class="product-image">🏪</div>
-                        <div class="product-info">
-                            <div class="product-title">市集活動</div>
-                            <div class="product-description">旅人市集主辦的各式主題市集，展售在地好物，推廣創新產品</div>
-                            <div class="product-tags">
-                                <span class="tag">市集</span>
-                                <span class="tag">展售</span>
-                                <span class="tag">推廣</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="service-news-card event-category-card" onclick="showEventCategory('satellite')">
-                        <div class="product-image">📍</div>
-                        <div class="product-info">
-                            <div class="product-title">衛星據點活動</div>
-                            <div class="product-description">各衛星據點舉辦的特色活動，體驗在地文化，參與社區營造</div>
-                            <div class="product-tags">
-                                <span class="tag">據點</span>
-                                <span class="tag">在地</span>
-                                <span class="tag">文化</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- 活動列表容器 -->
-                <div id="events-container" style="display: none; margin-top: 40px;">
-                    <div class="events-header">
-                        <h3 id="events-category-title">活動列表</h3>
-                        <button class="header-btn" onclick="hideEventsList()">返回分類</button>
-                    </div>
-                    <div id="events-list" class="events-grid">
-                        <!-- 活動內容會動態載入這裡 -->
-                    </div>
-                </div>
-            </div>
-        </div>
-
-                
-                    </div>
-                    
-                    <div class="service-news-card">
-                        <div class="product-image">🎓</div>
-                        <div class="product-info">
-                            <div class="product-title">創業講座系列</div>
-                            <div class="product-description">邀請成功創業者分享經驗，提供實用的創業知識與技巧</div>
-                            <div class="product-tags">
-                                <span class="tag">講座</span>
-                                <span class="tag">創業</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-<div class="content-page" id="aboutContent">
-            <div class="page-header">
-                <div>
-                    <div class="page-title">📖 關於我們</div>
-                    <div class="page-subtitle">聯絡資訊</div>
-                </div>
-            </div>
-            <div class="page-content" style="display: flex; justify-content: center; align-items: center;">
-                <div class="location-detail" style="max-width: 800px; width: 100%;">
-                    <div class="location-sections" style="grid-template-columns: 1fr; gap: 0;">
-                        <div class="section-card" style="padding: 40px; text-align: center;">
-                            <img src="images/logo.png" alt="旅人市集 Logo" style="width: 120px; margin-bottom: 10px;">
-                            <div style="font-size: 2rem; font-weight: 700; color: #333;">旅人市集</div>
-                            <div style="font-size: 1.2rem; color: #666; margin-bottom: 30px;">Walker's Market</div>
-
-                            <div style="text-align: left; display: inline-block; font-size: 1.1rem; color: #444;">
-                                <p style="margin-bottom: 15px;"><strong>🕒 營業時間：</strong>週一至週五 09:30 - 18:00</p>
-                                <p style="margin-bottom: 15px;"><strong>📞 聯絡我們：</strong>05-770-6155</p>
-                                <p style="margin-bottom: 15px;"><strong>📧 聯絡信箱：</strong>ccas110@jxiim.com</p>
-                                <p style="margin-bottom: 30px;"><strong>📍 聯絡地址：</strong>雲林縣北港鎮吉祥路45-8號</p>
-                            </div>
-
-                            <div>
-                                <span style="font-size: 2rem; margin: 0 10px;"><a href="https://www.facebook.com/你的頁面" class="fa fa-facebook" style="background:#3B5998;color:white;"></a>
-</span>
-                                <span style="font-size: 2rem; margin: 0 10px;"><a href="https://www.instagram.com/你的帳號" class="fa fa-instagram" style="background:#E1306C;color:white;"></a></span>
-                                <span style="font-size: 2rem; margin: 0 10px;">🟣</span>
-                                <span style="font-size: 2rem; margin: 0 10px;">🔴</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <button class="nav-control back-control" id="backBtn" onclick="goBack()" style="display: none;">←</button>
-        <div class="navigation-controls">
-            <button class="nav-control" onclick="goHome()">🏠</button>
-        </div>
-
-        <div class="idle-warning" id="idleWarning">
-            <h3>系統將在 10 秒後返回首頁</h3>
-            <p>請點選任意位置繼續使用</p>
-        </div>
+  <div class="container">
+    <!-- 1) 閒置首頁 idleHome -->
+    <div class="idle-home" id="idleHome">
+      <div class="background-video"></div>
+      <div class="lang-selector"></div>
+      <div class="main-logo"></div>
+      <div class="tagline">創生互動平台・在地青年聚點</div>
+      <button class="enter-portal" onclick="enterMainScreen()"><span>點選探索旅程</span></button>
     </div>
 
-    <script src="js/script.js"></script>
+    <!-- 2) 主畫面 mainScreen -->
+    <div class="main-screen" id="mainScreen">
+      <div class="header">
+        <div class="header-logo">🌟 旅人市集導覽平台</div>
+        <div class="header-controls"></div>
+      </div>
+      <div class="content-area">
+        <div class="main-menu" id="mainMenu">
+          <!-- A. 展區互動地圖入口 -->
+          <div class="map-section">
+            <div class="map-image" onclick="showContent('map')"></div>
+          </div>
+          <!-- B. 底部功能選單 -->
+          <div class="bottom-menu">
+            <div class="bottom-menu-item" onclick="showContent('products')">
+              <div class="bottom-menu-icon">🛍️</div><div class="bottom-menu-title">找產品</div>
+            </div>
+            <div class="bottom-menu-item" onclick="showContent('services')">
+              <div class="bottom-menu-icon">💬</div><div class="bottom-menu-title">找服務</div>
+            </div>
+            <div class="bottom-menu-item" onclick="showContent('news')">
+              <div class="bottom-menu-icon">📰</div><div class="bottom-menu-title">最新消息</div>
+            </div>
+            <div class="bottom-menu-item" onclick="showContent('media')">
+              <div class="bottom-menu-icon">🎥</div><div class="bottom-menu-title">多媒體專區</div>
+            </div>
+            <div class="bottom-menu-item" onclick="showContent('about')">
+              <div class="bottom-menu-icon">📖</div><div class="bottom-menu-title">關於我們</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- A) 展區互動地圖 mapContent + 子頁 locationContent -->
+    <div class="content-page" id="mapContent">
+      <div class="page-header">
+        <div>
+          <div class="page-title">🗺️ 展區互動地圖</div>
+          <div class="page-subtitle">旅人市集培育站（核心）與四大衛星據點</div>
+        </div>
+      </div>
+      <div class="page-content">
+        <div class="interactive-map">
+          <div class="map-container">
+            <div class="connection-line line1"></div>
+            <div class="connection-line line2"></div>
+            <div class="connection-line line3"></div>
+            <div class="connection-line line4"></div>
+            <div class="central-hub" id="centralHub" onclick="expandMap()">
+              <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;z-index:5;">
+                <div style="font-size:1.5rem;margin-bottom:5px;">🏛️</div>
+                <div style="font-size:1rem;font-weight:600;">旅人市集</div>
+                <div style="font-size:.9rem;">培育站（核心）</div>
+              </div>
+            </div>
+            <div class="satellite-point point1" onclick="showLocation('shuilin')">
+              <div style="font-size:1.5rem;margin-bottom:5px;">🌊</div>
+              <div style="font-size:1rem;font-weight:600;">水林</div>
+              <div style="font-size:.8rem;">雲林海青</div>
+            </div>
+            <div class="satellite-point point2" onclick="showLocation('dalin')">
+              <div style="font-size:1.5rem;margin-bottom:5px;">🏔️</div>
+              <div style="font-size:1rem;font-weight:600;">大林</div>
+              <div style="font-size:.8rem;">雪香亭</div>
+            </div>
+            <div class="satellite-point point3" onclick="showLocation('liujiao')">
+              <div style="font-size:1.5rem;margin-bottom:5px;">☕</div>
+              <div style="font-size:1rem;font-weight:600;">六腳</div>
+              <div style="font-size:.8rem;">鉛花咖啡</div>
+            </div>
+            <div class="satellite-point point4" onclick="showLocation('kouhu')">
+              <div style="font-size:1.5rem;margin-bottom:5px;">🐲</div>
+              <div style="font-size:1rem;font-weight:600;">口湖</div>
+              <div style="font-size:.8rem;">成龍捌貳</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-page" id="locationContent">
+      <div class="page-header">
+        <div>
+          <div class="page-title" id="locationTitle">據點詳情</div>
+          <div class="page-subtitle" id="locationSubtitle">據點介紹與服務資訊</div>
+        </div>
+      </div>
+      <div class="page-content">
+        <div class="location-detail">
+          <div class="location-hero" id="locationHero">據點封面圖片區域</div>
+          <div class="location-sections">
+            <div class="section-card">
+              <div class="section-title"><span>🧭</span><span>據點介紹</span></div>
+              <div class="section-content" id="locationIntro">據點故事、背景、所屬區域、營運團隊等詳細介紹...</div>
+            </div>
+            <div class="section-card">
+              <div class="section-title"><span>🛍️</span><span>商品與服務</span></div>
+              <div class="section-content" id="locationServices">提供的商品、服務內容、導覽資訊等...</div>
+            </div>
+            <div class="section-card">
+              <div class="section-title"><span>📍</span><span>周邊推薦</span></div>
+              <div class="section-content" id="locationNearby">附近景點、店家介紹，結合地圖定位...</div>
+            </div>
+            <div class="section-card">
+              <div class="section-title"><span>📱</span><span>聯絡資訊</span></div>
+              <div class="section-content" id="locationContact">QR code、IG、FB、地址資訊等聯絡方式...</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- B) 找產品 -->
+    <div class="content-page" id="productsContent">
+      <div class="page-header">
+        <div>
+          <div class="page-title">🛍️ 找產品</div>
+          <div class="page-subtitle">探索所有據點的特色商品</div>
+        </div>
+      </div>
+      <div class="page-content">
+        <div class="product-filters-container">
+          <div class="filter-group">
+            <span class="filter-label">據點：</span>
+            <div class="filter-options">
+              <button class="filter-btn active" data-location="all">全部據點</button>
+              <button class="filter-btn" data-location="旅人市集培育站">培育站</button>
+              <button class="filter-btn" data-location="水林・雲林海青">水林</button>
+              <button class="filter-btn" data-location="大林・雪香亭">大林</button>
+              <button class="filter-btn" data-location="六腳・鉛花咖啡">六腳</button>
+              <button class="filter-btn" data-location="口湖・成龍捌貳">口湖</button>
+            </div>
+          </div>
+          <div class="filter-group">
+            <span class="filter-label">搜尋：</span>
+            <input type="search" id="product-search-bar" class="search-bar" placeholder="輸入產品名稱、描述...">
+          </div>
+          <div class="filter-group">
+            <span class="filter-label">標籤：</span>
+            <div class="filter-options" id="product-tags-container"></div>
+          </div>
+        </div>
+        <hr style="margin:30px 0;border-color:rgba(255,255,255,0.2);">
+        <div class="product-grid" id="product-list-container">
+          <div class="loading-spinner">正在從 Airtable 載入產品...</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- C) 多媒體 -->
+    <div class="content-page" id="mediaContent">
+      <div class="page-header"><div><div class="page-title">🎥 多媒體專區</div><div class="page-subtitle">影片故事、活動照片與音聲內容</div></div></div>
+      <div class="page-content">
+        <div class="media-player">
+          <div class="video-container">🎬 影片播放區域<br><small>支援 YouTube、Vimeo 或本地影片檔案</small></div>
+          <div class="video-info">
+            <div class="video-title">旅人市集創生故事</div>
+            <div class="video-description">透過影像記錄，了解在地青年如何透過旅人市集平台...</div>
+          </div>
+        </div>
+        <div class="product-grid">
+          <div class="product-card"><div class="product-image">📸</div><div class="product-info"><div class="product-title">活動照片牆</div><div class="product-description">各據點活動精彩瞬間</div><div class="product-tags"><span class="tag">相片</span><span class="tag">活動</span></div></div></div>
+          <div class="product-card"><div class="product-image">🎙️</div><div class="product-info"><div class="product-title">創業者訪談</div><div class="product-description">Podcast 訪談內容</div><div class="product-tags"><span class="tag">音頻</span><span class="tag">訪談</span></div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- D) 找服務（動態渲染 VENUES / TOURS） -->
+    <div class="content-page" id="servicesContent">
+      <div class="page-header">
+        <div>
+          <div class="page-title">💬 找服務</div>
+          <div class="page-subtitle">場租、導覽等服務介紹（資訊曝光，不提供預約）</div>
+        </div>
+      </div>
+      <div class="page-content">
+        <div class="product-filters-container" id="services-filters"></div>
+        <hr style="margin:30px 0;border-color:rgba(255,255,255,0.2);">
+        <div class="product-grid" id="services-list-container">
+          <div class="loading-spinner">正在載入服務…</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- E) 最新消息 -->
+    <div class="content-page" id="newsContent">
+      <div class="page-header"><div><div class="page-title">📰 最新消息</div><div class="page-subtitle">市集活動、講座與共創成果</div></div></div>
+      <div class="page-content">
+        <div class="product-grid">
+          <div class="product-card event-category-card" onclick="showEventCategory('meeting')"><div class="product-image">👥</div><div class="product-info"><div class="product-title">青創者聚會</div><div class="product-description">定期交流與分享</div></div></div>
+          <div class="product-card event-category-card" onclick="showEventCategory('workshop')"><div class="product-image">🛠️</div><div class="product-info"><div class="product-title">青創者工作坊</div><div class="product-description">從品牌經營到數位行銷的實作課</div></div></div>
+          <div class="product-card event-category-card" onclick="showEventCategory('market')"><div class="product-image">🏪</div><div class="product-info"><div class="product-title">市集活動</div><div class="product-description">推廣在地好物</div></div></div>
+          <div class="product-card event-category-card" onclick="showEventCategory('satellite')"><div class="product-image">📍</div><div class="product-info"><div class="product-title">衛星據點活動</div><div class="product-description">體驗在地文化</div></div></div>
+        </div>
+        <div id="events-container" style="display:none;margin-top:40px;">
+          <div class="events-header">
+            <h3 id="events-category-title">活動列表</h3>
+            <button class="header-btn" onclick="hideEventsList()">返回分類</button>
+          </div>
+          <div id="events-list" class="events-grid"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- F) 關於我們 -->
+    <div class="content-page" id="aboutContent">
+      <div class="page-header"><div><div class="page-title">📖 關於我們</div><div class="page-subtitle">團隊介紹、發展歷程與計畫願景</div></div></div>
+      <div class="page-content">
+        <div class="location-detail">
+          <div class="location-sections">
+            <div class="section-card"><div class="section-title"><span>🎯</span><span>計畫願景</span></div><div class="section-content">打造整合性的在地創生平台...</div></div>
+            <div class="section-card"><div class="section-title"><span>👥</span><span>執行團隊</span></div><div class="section-content">跨領域團隊，為地方發展注入新活力。</div></div>
+            <div class="section-card"><div class="section-title"><span>🌱</span><span>發展歷程</span></div><div class="section-content">從單點育成擴展至多據點合作...</div></div>
+            <div class="section-card"><div class="section-title"><span>🚀</span><span>未來展望</span></div><div class="section-content">持續擴大合作網絡，深化文化傳承。</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 導覽控制 -->
+    <button class="nav-control back-control" id="backBtn" onclick="goBack()" style="display:none;">←</button>
+    <div class="navigation-controls"><button class="nav-control" onclick="goHome()">🏠</button></div>
+    <div class="idle-warning" id="idleWarning"><h3>系統將在 10 秒後返回首頁</h3><p>請點選任意位置繼續使用</p></div>
+  </div>
+
+  <script src="js/script.js"></script>
 </body>
 </html>
