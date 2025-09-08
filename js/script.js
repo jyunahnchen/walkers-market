@@ -419,9 +419,20 @@ async function initializeProductsPage() {
             const response = await fetch('/.netlify/functions/getProducts');
             
             if (!response.ok) {
-                const errorData = await response.json();
-                console.error("API Error:", errorData);
-                throw new Error(`API Error: ${errorData.message || response.statusText}`);
+                const contentType = response.headers.get('content-type') || '';
+                let detail = '';
+                try {
+                    if (contentType.includes('application/json')) {
+                        const errorData = await response.json();
+                        detail = errorData.message || JSON.stringify(errorData);
+                    } else {
+                        const errorText = await response.text();
+                        detail = errorText.slice(0, 200);
+                    }
+                } catch (_) {
+                    // ignore parse errors
+                }
+                throw new Error(`HTTP ${response.status} ${response.statusText}${detail ? ' - ' + detail : ''}`);
             }
             
             const records = await response.json();
@@ -474,7 +485,7 @@ function renderProducts() {
             const productCard = document.createElement('div');
             productCard.className = 'product-card';
 
-            const imageUrl = fields['產品照片'] ? fields['產品照片'][0].thumbnails.large.url : '/images/logo.png';
+            const imageUrl = fields['產品照片'] ? fields['產品照片'][0].thumbnails.large.url : 'images/logo.png';
             const purchaseLink = fields['導購連結'] || '#';
 
             productCard.innerHTML = `
