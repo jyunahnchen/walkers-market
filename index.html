@@ -28,6 +28,7 @@
         <!-- A. 展區互動地圖 (直接顯示) -->
         <div class="interactive-map">
           <div class="map-container">
+            <!-- 連接線 - 星塵光暈旋轉版 -->
             <div class="connection-line line1"></div>
             <div class="connection-line line2"></div>
             <div class="connection-line line3"></div>
@@ -39,25 +40,35 @@
                 <div style="font-size:.9rem;">培育站（核心）</div>
               </div>
             </div>
-            <div class="satellite-point point1" onclick="showLocation('shuilin')">
-              <div style="font-size:1.5rem;margin-bottom:5px;">🌊</div>
-              <div style="font-size:1rem;font-weight:600;">水林</div>
-              <div style="font-size:.8rem;">雲林海青</div>
-            </div>
-            <div class="satellite-point point2" onclick="showLocation('dalin')">
-              <div style="font-size:1.5rem;margin-bottom:5px;">🏔️</div>
-              <div style="font-size:1rem;font-weight:600;">大林</div>
-              <div style="font-size:.8rem;">雪香亭</div>
-            </div>
-            <div class="satellite-point point3" onclick="showLocation('liujiao')">
-              <div style="font-size:1.5rem;margin-bottom:5px;">☕</div>
-              <div style="font-size:1rem;font-weight:600;">六腳</div>
-              <div style="font-size:.8rem;">鉛花咖啡</div>
-            </div>
-            <div class="satellite-point point4" onclick="showLocation('kouhu')">
-              <div style="font-size:1.5rem;margin-bottom:5px;">🐲</div>
-              <div style="font-size:1rem;font-weight:600;">口湖</div>
-              <div style="font-size:.8rem;">成龍捌貳</div>
+            <div class="satellite-orbit">
+              <div class="satellite-point point1" onclick="showLocation('shuilin')">
+                <div class="satellite-content">
+                  <div style="font-size:1.5rem;margin-bottom:5px;">🌊</div>
+                  <div style="font-size:1rem;font-weight:600;">水林</div>
+                  <div style="font-size:.8rem;">雲林海青</div>
+                </div>
+              </div>
+              <div class="satellite-point point2" onclick="showLocation('dalin')">
+                <div class="satellite-content">
+                  <div style="font-size:1.5rem;margin-bottom:5px;">🏔️</div>
+                  <div style="font-size:1rem;font-weight:600;">大林</div>
+                  <div style="font-size:.8rem;">雪香亭</div>
+                </div>
+              </div>
+              <div class="satellite-point point3" onclick="showLocation('liujiao')">
+                <div class="satellite-content">
+                  <div style="font-size:1.5rem;margin-bottom:5px;">☕</div>
+                  <div style="font-size:1rem;font-weight:600;">六腳</div>
+                  <div style="font-size:.8rem;">鉛花咖啡</div>
+                </div>
+              </div>
+              <div class="satellite-point point4" onclick="showLocation('kouhu')">
+                <div class="satellite-content">
+                  <div style="font-size:1.5rem;margin-bottom:5px;">🐲</div>
+                  <div style="font-size:1rem;font-weight:600;">口湖</div>
+                  <div style="font-size:.8rem;">成龍捌貳</div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
