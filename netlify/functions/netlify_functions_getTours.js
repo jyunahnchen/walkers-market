@@ -3,7 +3,7 @@ const Airtable = require('airtable');
 exports.handler = async () => {
   try {
     const { AIRTABLE_API_KEY, AIRTABLE_BASE_ID } = process.env;
-    const TABLE = 'TOURS';
+    const TABLE = process.env.AIRTABLE_TOURS_TABLE_NAME || 'TOURS';
 
     if (!AIRTABLE_API_KEY || !AIRTABLE_BASE_ID) {
       const mock = [

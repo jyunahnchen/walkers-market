@@ -3,7 +3,7 @@ const Airtable = require('airtable');
 exports.handler = async () => {
   try {
     const { AIRTABLE_API_KEY, AIRTABLE_BASE_ID } = process.env;
-    const TABLE = 'VENUES';
+    const TABLE = process.env.AIRTABLE_VENUES_TABLE_NAME || 'VENUES';
 
     // 允許在本地/未設環境變數時回傳測試資料
     if (!AIRTABLE_API_KEY || !AIRTABLE_BASE_ID) {
