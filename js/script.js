@@ -32,16 +32,6 @@ function showContent(contentId) {
   currentPage = contentId;
   document.getElementById('backBtn').style.display = 'block';
   resetIdleTimer();
-
-  if (contentId === 'map') {
-    document.getElementById('mainMenu').style.display = 'flex';
-  }
-}
-
-function expandMap() {
-  const centralHub = document.getElementById('centralHub');
-  centralHub.classList.add('expanded');
-  resetIdleTimer();
 }
 
 function showLocation(locationId) {
@@ -118,17 +108,10 @@ function hideAllContent() {
 }
 
 function goBack() {
-  const centralHub = document.getElementById('centralHub');
-  if (centralHub && centralHub.classList.contains('expanded')) {
-    centralHub.classList.remove('expanded');
-    resetIdleTimer();
-    return;
-  }
   if (pageStack.length > 0) {
     const previousPage = pageStack.pop();
     hideAllContent();
     if (previousPage === 'main') {
-      document.getElementById('mainMenu').style.display = 'flex';
       document.getElementById('backBtn').style.display = 'none';
     } else {
       const prevEl = document.getElementById(previousPage + 'Content');
@@ -144,12 +127,9 @@ function goBack() {
 
 function goHome() {
   hideAllContent();
-  document.getElementById('mainMenu').style.display = 'flex';
   document.getElementById('backBtn').style.display = 'none';
   pageStack = [];
   currentPage = 'main';
-  const centralHub = document.getElementById('centralHub');
-  if (centralHub) centralHub.classList.remove('expanded');
   resetIdleTimer();
 }
 
@@ -171,12 +151,9 @@ function returnToIdle() {
   document.getElementById('mainScreen').classList.remove('active');
   document.getElementById('idleHome').classList.remove('hidden');
   hideAllContent();
-  document.getElementById('mainMenu').style.display = 'flex';
   document.getElementById('backBtn').style.display = 'none';
   pageStack = [];
   currentPage = 'idle';
-  const centralHub = document.getElementById('centralHub');
-  if (centralHub) centralHub.classList.remove('expanded');
 }
 
 // -------------------- Google Calendar（保持原樣） --------------------

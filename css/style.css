@@ -220,39 +220,11 @@ body {
 /* 主選單重新布局 */
 .content-area {
     flex: 1;
-    padding: 20px 40px 10px 40px;
-    overflow-y: auto;
+    padding: 0; /* 移除內邊距，讓地圖填滿 */
+    overflow: hidden; /* 隱藏滾動條 */
     position: relative;
     display: flex;
     flex-direction: column;
-}
-
-.main-menu {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    gap: 40px;
-}
-
-/* 中間的地圖區域 */
-.map-section {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.map-image {
-    width: 400px;
-    height: 200px;
-    background: url('/images/rotating_planet.gif') center/contain no-repeat;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    border-radius: 20px;
-}
-
-.map-image:hover {
-    transform: scale(1.05);
 }
 
 /* 底部選單 */
@@ -260,7 +232,12 @@ body {
     display: flex;
     justify-content: space-between;
     gap: 20px;
-    padding: 10px 0;
+    padding: 20px 40px;
+    position: absolute; /* 讓選單浮在地圖上 */
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 20;
 }
 
 .bottom-menu-item {
@@ -365,12 +342,14 @@ body {
     align-items: center;
     height: 100%;
     position: relative;
+    flex-grow: 1; /* 讓地圖填滿剩餘空間 */
 }
 
 .map-container {
     position: relative;
     width: 800px;
     height: 600px;
+    transform: scale(0.9); /* 稍微縮小以適應畫面 */
 }
 
 .central-hub {
@@ -386,7 +365,7 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    cursor: pointer;
+    cursor: default; /* 移除點擊指標 */
     transition: all 0.5s ease;
     box-shadow: 0 10px 30px rgba(0,0,0,0.2);
     color: white;
@@ -394,23 +373,6 @@ body {
     font-size: 1.2rem;
     text-align: center;
     z-index: 10;
-}
-
-.central-hub:hover {
-    transform: translate(-50%, -50%) scale(1.1);
-    box-shadow: 0 15px 40px rgba(0,0,0,0.3);
-}
-
-.central-hub.expanded + .satellite-point,
-.central-hub.expanded ~ .satellite-point {
-    opacity: 1;
-    transform: scale(1);
-    pointer-events: auto;
-}
-
-.central-hub.expanded ~ .connection-line {
-    opacity: 0.8;
-    transform: scaleX(1);
 }
 
 .satellite-point {
@@ -430,13 +392,13 @@ body {
     font-weight: 500;
     font-size: 0.9rem;
     text-align: center;
-    opacity: 0;
-    transform: scale(0.5);
-    pointer-events: none;
+    opacity: 1; /* 預設可見 */
+    transform: scale(1); /* 預設正常大小 */
+    pointer-events: auto; /* 預設可點擊 */
 }
 
 .satellite-point:hover {
-    transform: scale(1.2);
+    transform: scale(1.2) !important; /* 確保 hover 效果生效 */
     box-shadow: 0 10px 30px rgba(0,0,0,0.3);
     background: linear-gradient(45deg, #FF8C00, #FFD700);
 }
@@ -444,48 +406,31 @@ body {
 .satellite-point.point1 { 
     top: 20px; 
     left: 50%; 
-    transform: translateX(-50%) scale(0.5); 
-    transition-delay: 0.1s;
+    transform: translateX(-50%); 
 }
 .satellite-point.point2 { 
     top: 50%; 
     right: 20px; 
-    transform: translateY(-50%) scale(0.5); 
-    transition-delay: 0.2s;
+    transform: translateY(-50%); 
 }
 .satellite-point.point3 { 
     bottom: 20px; 
     left: 50%; 
-    transform: translateX(-50%) scale(0.5); 
-    transition-delay: 0.3s;
+    transform: translateX(-50%); 
 }
 .satellite-point.point4 { 
     top: 50%; 
     left: 20px; 
-    transform: translateY(-50%) scale(0.5); 
-    transition-delay: 0.4s;
-}
-
-.central-hub.expanded ~ .satellite-point.point1 {
-    transform: translateX(-50%) scale(1);
-}
-.central-hub.expanded ~ .satellite-point.point2 {
-    transform: translateY(-50%) scale(1);
-}
-.central-hub.expanded ~ .satellite-point.point3 {
-    transform: translateX(-50%) scale(1);
-}
-.central-hub.expanded ~ .satellite-point.point4 {
-    transform: translateY(-50%) scale(1);
+    transform: translateY(-50%); 
 }
 
 .connection-line {
     position: absolute;
     height: 2px;
     background: linear-gradient(90deg, #8B4513, #2E8B57);
-    opacity: 0;
+    opacity: 0.8; /* 預設可見 */
     pointer-events: none;
-    transform: scaleX(0);
+    transform: scaleX(1); /* 預設正常大小 */
     transition: all 0.5s ease;
     transform-origin: center;
 }
@@ -494,46 +439,25 @@ body {
     width: 200px; 
     top: 120px; 
     left: 50%; 
-    transform: translateX(-50%) scaleX(0); 
-    transition-delay: 0.1s;
+    transform: translateX(-50%); 
 }
 .line2 { 
     width: 200px; 
     right: 120px; 
     top: 50%; 
-    transform: translateY(-50%) scaleX(0); 
-    transition-delay: 0.2s;
+    transform: translateY(-50%); 
 }
 .line3 { 
     width: 200px; 
     bottom: 120px; 
     left: 50%; 
-    transform: translateX(-50%) scaleX(0); 
-    transition-delay: 0.3s;
+    transform: translateX(-50%); 
 }
 .line4 { 
     width: 200px; 
     left: 120px; 
     top: 50%; 
-    transform: translateY(-50%) scaleX(0); 
-    transition-delay: 0.4s;
-}
-
-.central-hub.expanded ~ .connection-line.line1 {
-    transform: translateX(-50%) scaleX(1);
-    opacity: 0.8;
-}
-.central-hub.expanded ~ .connection-line.line2 {
-    transform: translateY(-50%) scaleX(1);
-    opacity: 0.8;
-}
-.central-hub.expanded ~ .connection-line.line3 {
-    transform: translateX(-50%) scaleX(1);
-    opacity: 0.8;
-}
-.central-hub.expanded ~ .connection-line.line4 {
-    transform: translateY(-50%) scaleX(1);
-    opacity: 0.8;
+    transform: translateY(-50%); 
 }
 
 /* 產品網格 - 統一樣式 */

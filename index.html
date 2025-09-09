@@ -25,49 +25,14 @@
         <div class="header-controls"></div>
       </div>
       <div class="content-area">
-        <div class="main-menu" id="mainMenu">
-          <!-- A. 展區互動地圖入口 -->
-          <div class="map-section">
-            <div class="map-image" onclick="showContent('map')"></div>
-          </div>
-          <!-- B. 底部功能選單 -->
-          <div class="bottom-menu">
-            <div class="bottom-menu-item" onclick="showContent('products')">
-              <div class="bottom-menu-icon">🛍️</div><div class="bottom-menu-title">找產品</div>
-            </div>
-            <div class="bottom-menu-item" onclick="showContent('services')">
-              <div class="bottom-menu-icon">💬</div><div class="bottom-menu-title">找服務</div>
-            </div>
-            <div class="bottom-menu-item" onclick="showContent('news')">
-              <div class="bottom-menu-icon">📰</div><div class="bottom-menu-title">最新消息</div>
-            </div>
-            <div class="bottom-menu-item" onclick="showContent('media')">
-              <div class="bottom-menu-icon">🎥</div><div class="bottom-menu-title">多媒體專區</div>
-            </div>
-            <div class="bottom-menu-item" onclick="showContent('about')">
-              <div class="bottom-menu-icon">📖</div><div class="bottom-menu-title">關於我們</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- A) 展區互動地圖 mapContent + 子頁 locationContent -->
-    <div class="content-page" id="mapContent">
-      <div class="page-header">
-        <div>
-          <div class="page-title">🗺️ 展區互動地圖</div>
-          <div class="page-subtitle">旅人市集培育站（核心）與四大衛星據點</div>
-        </div>
-      </div>
-      <div class="page-content">
+        <!-- A. 展區互動地圖 (直接顯示) -->
         <div class="interactive-map">
           <div class="map-container">
             <div class="connection-line line1"></div>
             <div class="connection-line line2"></div>
             <div class="connection-line line3"></div>
             <div class="connection-line line4"></div>
-            <div class="central-hub" id="centralHub" onclick="expandMap()">
+            <div class="central-hub" id="centralHub">
               <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;z-index:5;">
                 <div style="font-size:1.5rem;margin-bottom:5px;">🏛️</div>
                 <div style="font-size:1rem;font-weight:600;">旅人市集</div>
@@ -96,7 +61,29 @@
             </div>
           </div>
         </div>
+        <!-- B. 底部功能選單 -->
+        <div class="bottom-menu">
+          <div class="bottom-menu-item" onclick="showContent('products')">
+            <div class="bottom-menu-icon">🛍️</div><div class="bottom-menu-title">找產品</div>
+          </div>
+          <div class="bottom-menu-item" onclick="showContent('services')">
+            <div class="bottom-menu-icon">💬</div><div class="bottom-menu-title">找服務</div>
+          </div>
+          <div class="bottom-menu-item" onclick="showContent('news')">
+            <div class="bottom-menu-icon">📰</div><div class="bottom-menu-title">最新消息</div>
+          </div>
+          <div class="bottom-menu-item" onclick="showContent('media')">
+            <div class="bottom-menu-icon">🎥</div><div class="bottom-menu-title">多媒體專區</div>
+          </div>
+          <div class="bottom-menu-item" onclick="showContent('about')">
+            <div class="bottom-menu-icon">📖</div><div class="bottom-menu-title">關於我們</div>
+          </div>
+        </div>
       </div>
+    </div>
+
+    <!-- A) 展區互動地圖 mapContent (此區塊已合併至 mainScreen，可刪除或保留備用) -->
+    <div class="content-page" id="mapContent" style="display: none !important;">
     </div>
 
     <div class="content-page" id="locationContent">
@@ -180,8 +167,6 @@
           </div>
         </div>
         <div class="product-grid">
-          <div class="product-card"><div class="product-image">📸</div><div class="product-info"><div class="product-title">活動照片牆</div><div class="product-description">各據點活動精彩瞬間</div><div class="product-tags"><span class="tag">相片</span><span class="tag">活動</span></div></div></div>
-          <div class="product-card"><div class="product-image">🎙️</div><div class="product-info"><div class="product-title">創業者訪談</div><div class="product-description">Podcast 訪談內容</div><div class="product-tags"><span class="tag">音頻</span><span class="tag">訪談</span></div></div></div>
         </div>
       </div>
     </div>

@@ -7,7 +7,7 @@ exports.handler = async function(event, context) {
         // 從環境變數獲取 Airtable 設定
         const AIRTABLE_API_KEY = process.env.AIRTABLE_API_KEY;
         const AIRTABLE_BASE_ID = process.env.AIRTABLE_BASE_ID;
-        const AIRTABLE_TABLE_NAME = process.env.AIRTABLE_TABLE_NAME || '產品列表';
+        const AIRTABLE_TABLE_NAME = process.env.AIRTABLE_TABLE_NAME || 'PRODUCTS';
 
         
 
