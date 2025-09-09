@@ -138,13 +138,14 @@ function resetIdleTimer() {
   clearTimeout(idleTimer);
   clearTimeout(warningTimer);
   document.getElementById('idleWarning').classList.remove('show');
+  // 10分鐘 = 600,000ms。警告訊息在 10 分鐘前的 10 秒（590,000ms）跳出
   warningTimer = setTimeout(() => {
     document.getElementById('idleWarning').classList.add('show');
-  }, 50000);
+  }, 590000); 
   idleTimer = setTimeout(() => {
     document.getElementById('idleWarning').classList.remove('show');
     returnToIdle();
-  }, 60000);
+  }, 600000); 
 }
 
 function returnToIdle() {
@@ -484,3 +485,16 @@ showContent = function(contentId) {
   if (contentId === 'products') initializeProductsPage();
   if (contentId === 'services') initializeServicesPage();
 };
+
+// -------------------- 多媒體專區 --------------------
+function switchVideo(videoId, btnElement) {
+  const iframe = document.getElementById('media-video-player');
+  iframe.src = `https://www.youtube.com/embed/${videoId}`;
+  
+  // 處理按鈕的 'active' 狀態
+  const buttons = document.querySelectorAll('.video-tag-btn');
+  buttons.forEach(btn => btn.classList.remove('active'));
+  btnElement.classList.add('active');
+  
+  resetIdleTimer(); // 點擊按鈕時重設計時器
+}

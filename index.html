@@ -159,14 +159,20 @@
     <div class="content-page" id="mediaContent">
       <div class="page-header"><div><div class="page-title">🎥 多媒體專區</div><div class="page-subtitle">影片故事、活動照片與音聲內容</div></div></div>
       <div class="page-content">
-        <div class="media-player">
-          <div class="video-container">🎬 影片播放區域<br><small>支援 YouTube、Vimeo 或本地影片檔案</small></div>
-          <div class="video-info">
-            <div class="video-title">旅人市集創生故事</div>
-            <div class="video-description">透過影像記錄，了解在地青年如何透過旅人市集平台...</div>
+        <div class="media-player-container">
+          <div class="video-player-wrapper">
+            <iframe id="media-video-player" 
+                    src="https://www.youtube.com/embed/L2IQ01y49ms" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen>
+            </iframe>
           </div>
-        </div>
-        <div class="product-grid">
+          <div class="video-selector">
+            <button class="video-tag-btn active" onclick="switchVideo('L2IQ01y49ms', this)">《創業歸故里》</button>
+            <button class="video-tag-btn" onclick="switchVideo('0briiDrlaxc', this)">《在地旅人 微電影》</button>
+            <button class="video-tag-btn" onclick="switchVideo('-wSHgsDh_Hc', this)">旅人市集培育站</button>
+          </div>
         </div>
       </div>
     </div>
