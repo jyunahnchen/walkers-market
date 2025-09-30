@@ -27,7 +27,12 @@ function enterMainScreen() {
 function showContent(contentId) {
   hideAllContent();
   const pageEl = document.getElementById(contentId + 'Content');
-  if (pageEl) pageEl.classList.add('active');
+  if (pageEl) {
+    pageEl.classList.add('active');
+    if (contentId === 'about') {
+      resetAboutSection();
+    }
+  }
   pageStack.push(currentPage);
   currentPage = contentId;
   document.getElementById('backBtn').style.display = 'block';
@@ -107,7 +112,44 @@ function hideAllContent() {
   }
 }
 
+function resetAboutSection() {
+  const grid = document.getElementById('aboutCardGrid');
+  const detail = document.getElementById('aboutDetail');
+  const titleEl = document.getElementById('aboutDetailTitle');
+  const bodyEl = document.getElementById('aboutDetailBody');
+  if (grid) grid.classList.remove('is-hidden');
+  if (detail) detail.classList.remove('active');
+  if (titleEl) titleEl.textContent = '';
+  if (bodyEl) bodyEl.innerHTML = '';
+}
+
+function showAboutDetail(key) {
+  const grid = document.getElementById('aboutCardGrid');
+  const detail = document.getElementById('aboutDetail');
+  const titleEl = document.getElementById('aboutDetailTitle');
+  const bodyEl = document.getElementById('aboutDetailBody');
+  const template = document.querySelector(`.about-detail-template[data-key="${key}"]`);
+  if (!grid || !detail || !titleEl || !bodyEl || !template) return;
+  grid.classList.add('is-hidden');
+  detail.classList.add('active');
+  titleEl.textContent = template.dataset.title || '';
+  bodyEl.innerHTML = template.innerHTML;
+  resetIdleTimer();
+}
+
+function closeAboutDetail() {
+  resetAboutSection();
+  resetIdleTimer();
+}
+
 function goBack() {
+  if (currentPage === 'about') {
+    const aboutDetail = document.getElementById('aboutDetail');
+    if (aboutDetail && aboutDetail.classList.contains('active')) {
+      closeAboutDetail();
+      return;
+    }
+  }
   if (pageStack.length > 0) {
     const previousPage = pageStack.pop();
     hideAllContent();

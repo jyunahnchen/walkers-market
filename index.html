@@ -227,16 +227,157 @@
 
     <!-- F) 關於我們 -->
     <div class="content-page" id="aboutContent">
-      <div class="page-header"><div><div class="page-title">📖 關於我們</div><div class="page-subtitle">團隊介紹、發展歷程與計畫願景</div></div></div>
-      <div class="page-content">
-        <div class="location-detail">
-          <div class="location-sections">
-            <div class="section-card"><div class="section-title"><span>🎯</span><span>計畫願景</span></div><div class="section-content">打造整合性的在地創生平台...</div></div>
-            <div class="section-card"><div class="section-title"><span>👥</span><span>執行團隊</span></div><div class="section-content">跨領域團隊，為地方發展注入新活力。</div></div>
-            <div class="section-card"><div class="section-title"><span>🌱</span><span>發展歷程</span></div><div class="section-content">從單點育成擴展至多據點合作...</div></div>
-            <div class="section-card"><div class="section-title"><span>🚀</span><span>未來展望</span></div><div class="section-content">持續擴大合作網絡，深化文化傳承。</div></div>
-          </div>
+      <div class="page-header">
+        <div>
+          <div class="page-title">📖 關於我們</div>
+          <div class="page-subtitle">北港旅人市集培育站</div>
         </div>
+      </div>
+      <div class="page-content">
+        <section id="about" class="about-wrap">
+
+
+          <div class="about-main">
+            <div class="about-grid" id="aboutCardGrid">
+              <button class="section-card about-card" type="button" data-target="vision" onclick="showAboutDetail('vision')">
+                <div class="card-icon">🎯</div>
+                <div class="card-title">在地願景</div>
+                <p class="card-summary">串連返鄉青年，透過創業訓練與場域實作，打造有北港味的創業生活。</p>
+              </button>
+              <button class="section-card about-card" type="button" data-target="team" onclick="showAboutDetail('team')">
+                <div class="card-icon">👥</div>
+                <div class="card-title">執行團隊</div>
+                <p class="card-summary">地方青年與合作夥伴共創，串聯產官學資源，成為在地智庫。</p>
+              </button>
+              <button class="section-card about-card" type="button" data-target="community" onclick="showAboutDetail('community')">
+                <div class="card-icon">🤝</div>
+                <div class="card-title">深化社區參與</div>
+                <p class="card-summary">市集 × 藝術 × 信仰 × 環保，讓空間成為交流與互助的行動基地。</p>
+              </button>
+              <button class="section-card about-card" type="button" data-target="future" onclick="showAboutDetail('future')">
+                <div class="card-icon">🚀</div>
+                <div class="card-title">未來展望</div>
+                <p class="card-summary">擴大合作網絡，優化創業支持，讓文化與創意共同成長。</p>
+              </button>
+              <button class="section-card about-card" type="button" data-target="contact" onclick="showAboutDetail('contact')">
+                <div class="card-icon">☎️</div>
+                <div class="card-title">聯絡資訊</div>
+                <p class="card-summary">旅人市集培育站｜雲林縣北港鎮華興街 41 號｜05-7706155</p>
+              </button>
+            </div>
+
+            <div class="about-detail" id="aboutDetail">
+              <div class="section-card detail-card">
+                <div class="detail-header">
+                  <button class="detail-back" type="button" onclick="closeAboutDetail()">← 返回</button>
+                  <h2 class="detail-title" id="aboutDetailTitle"></h2>
+                </div>
+                <div class="detail-body" id="aboutDetailBody"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="about-detail-template" data-key="vision" data-title="在地願景（計畫願景）">
+            <p>北港旅人市集培育站是以青年創業與地方發展為主軸的平台。我們串連返鄉青年，透過創業基本功訓練（市場分析、經營管理等）與在地實踐，鼓勵發展具北港特色的產品與服務。市集本身就是嘗試與交流的場域，幫助夥伴持續成長。</p>
+          </div>
+
+          <div class="about-detail-template" data-key="team" data-title="執行團隊（專案經驗與新聞）">
+            <p>由在地青年與合作夥伴共同推動，包括雲林縣青年事務協進會、精璽創新整合行銷等，串聯產官學與社群資源，逐步從地方團隊走向「合作平台／在地智庫」。</p>
+            <ul class="news-links">
+              <li>
+                <strong>國本學堂｜農友培育</strong>
+                <ul class="sub-links">
+                  <li><a href="https://www.cna.com.tw/postwrite/chi/404014" target="_blank" rel="noopener">中央社：首屆學員轉型為智慧農業領航員</a></li>
+                  <li><a href="https://www.cyhg.gov.tw/News_Content.aspx?n=14421&s=231555" target="_blank" rel="noopener">嘉義縣政府：卓越班交流與課程</a></li>
+                  <li><a href="https://www.chiayum.com.tw/News/228" target="_blank" rel="noopener">Chiayum：第四屆結業典禮與培訓成果</a></li>
+                </ul>
+              </li>
+              <li>
+                <strong>嘉我好漾｜青年計畫</strong>
+                <ul class="sub-links">
+                  <li><a href="https://www.cyhg.gov.tw/News_Content.aspx?n=14421&s=213606" target="_blank" rel="noopener">嘉義縣政府：青年集合成果展</a></li>
+                  <li><a href="https://www.cna.com.tw/postwrite/chi/401633" target="_blank" rel="noopener">中央社：AI 課程助青年創業圓夢</a></li>
+                  <li><a href="https://www.facebook.com/100067788076816/posts/1102435392026053/" target="_blank" rel="noopener">勞青處：跨縣市青年交流（FB）</a></li>
+                </ul>
+              </li>
+              <li>
+                <strong>雲林雲青加速器</strong>
+                <ul class="sub-links">
+                  <li><a href="https://www.yunlin.gov.tw/News_Content.aspx?n=1244&s=399167" target="_blank" rel="noopener">雲林縣政府：雲青加速器成果展</a></li>
+                </ul>
+              </li>
+              <li>
+                <strong>青年公共參與 × 觀光餐飲 × 觀光學院</strong>
+                <ul class="sub-links">
+                  <li><a href="https://www.cna.com.tw/postwrite/chi/410837" target="_blank" rel="noopener">中央社：〈有青嘉大聲〉Podcast—教育部青參深化補助</a></li>
+                  <li><a href="https://www.cyscc.gov.tw/News_Content/114/17181/" target="_blank" rel="noopener">議會資訊：青參深化計畫（第2階段）補助核定</a></li>
+                  <li><a href="https://tw.news.yahoo.com/%E5%9C%A8%E5%9C%B0%E9%87%8E%E8%8F%9C%E5%85%A5%E8%8F%9C%E8%A7%80%E5%85%89%E5%AD%B8%E9%99%A2%E8%AA%B2%E7%A8%8B-%E9%BB%83%E6%99%AF%E9%BE%8D%E4%B8%BB%E5%BB%9A%E7%A4%BA%E7%AF%84%E6%96%99%E7%90%86-034021118.html" target="_blank" rel="noopener">Yahoo：觀光學院課程（黃景龍主廚示範）</a></li>
+                  <li><a href="https://news.st-media.com.tw/news/43999" target="_blank" rel="noopener">台灣生活新聞：名廚到府輔導課程</a></li>
+                </ul>
+              </li>
+              <li>
+                <strong>鹿草鄉｜農業六級化產銷鏈結</strong>
+                <ul class="sub-links">
+                  <li><a href="https://www.cna.com.tw/news/aloc/202406050059.aspx" target="_blank" rel="noopener">中央社：與日本食研合作上架商品</a></li>
+                  <li><a href="https://udn.com/news/story/7326/8692990" target="_blank" rel="noopener">聯合報：九宮格餐盒系列課程啟動</a></li>
+                  <li><a href="https://esgtimes.com.tw/17764-2/" target="_blank" rel="noopener">ESG TIMES：六級化與低碳旅遊專題</a></li>
+                </ul>
+              </li>
+              <li>
+                <strong>企業合作｜背景連結</strong>
+                <ul class="sub-links">
+                  <li><a href="https://www.dachan.com/news" target="_blank" rel="noopener">大成集團：官方新聞中心</a></li>
+                  <li><a href="https://udn.com/news/story/6904/8195360" target="_blank" rel="noopener">聯合報：大成長城董事長專訪（科學化經營）</a></li>
+                </ul>
+              </li>
+            </ul>
+            <p class="news-note">饗賓餐旅、ALION 尚未檢索到與本專案直接相關的公開新聞；可改掛自家新聞／貼文。</p>
+          </div>
+
+          <div class="about-detail-template" data-key="community" data-title="深化社區參與">
+            <p>我們以「市集 × 藝術 × 信仰 × 環保」連結地方：小型展演、主題市集、志工行動到社區串聯，讓市集成為交流與互相幫忙的場域。培育站空間（北港鎮華興街 41 號）長期開放作為資源交換與共學節點。</p>
+          </div>
+
+          <div class="about-detail-template" data-key="future" data-title="未來展望（擴大合作網絡、深化文化傳承）">
+            <ul class="bullet-list">
+              <li><strong>擴大合作網絡：</strong>連結店家、學校與公私部門，建立穩定夥伴關係。</li>
+              <li><strong>提升創業支持：</strong>優化課程與陪跑機制，協助從 0→1→規模化。</li>
+              <li><strong>深化文化傳承：</strong>把在地故事與工藝轉成產品與內容，讓創意與記憶一起長大。</li>
+            </ul>
+          </div>
+
+          <div class="about-detail-template" data-key="contact" data-title="聯絡我們">
+            <p><strong>聯絡人：</strong>小康</p>
+            <p><strong>電話：</strong><a href="tel:057706155">05-7706155</a></p>
+            <p><strong>Email：</strong><a href="mailto:ccas110@jxiim.com">ccas110@jxiim.com</a></p>
+            <p><strong>地址：</strong>雲林縣北港鎮華興街 41 號（旅人市集培育站）</p>
+          </div>
+
+          <!-- 結構化資料（可提升 SEO 顯示） -->
+          <script type="application/ld+json">
+          {
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "name": "北港旅人市集培育站",
+            "description": "以輔導陪伴、創新培力、實踐平台為核心的在地青年創業培育空間與合作網絡。",
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": "雲林縣北港鎮",
+              "streetAddress": "華興街41號"
+            },
+            "email": "ccas110@jxiim.com",
+            "telephone": "+886-5-770-6155",
+            "url": "https://www.pakanglab.com.tw/",
+            "contactPoint": [{
+              "@type": "ContactPoint",
+              "contactType": "customer service",
+              "name": "小康",
+              "email": "ccas110@jxiim.com",
+              "telephone": "+886-5-770-6155"
+            }]
+          }
+          </script>
+        </section>
       </div>
     </div>
 
