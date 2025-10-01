@@ -662,8 +662,6 @@ body {
     display: flex;
     flex-direction: column;
     gap: 24px;
-    height: 100%;
-    overflow: hidden;
 }
 
 .about-intro h1 {
@@ -678,17 +676,17 @@ body {
 }
 
 .about-main {
-    flex: 1;
     display: flex;
     gap: 24px;
-    overflow: hidden;
+    align-items: flex-start;
 }
 
 .about-grid {
-    flex: 1;
+    flex: 1 1 50%;
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 24px;
+    align-content: flex-start;
 }
 
 .about-card {
@@ -699,6 +697,7 @@ body {
     flex-direction: column;
     gap: 12px;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    padding: 24px;
 }
 
 .about-card:hover,
@@ -729,17 +728,16 @@ body {
 
 .about-detail {
     display: none;
-    flex: 1;
+    flex: 1 1 50%;
 }
 
 .about-detail.active {
-    display: flex;
+    display: block;
 }
 
 .detail-card {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
+    display: block;
+    padding: 24px;
 }
 
 .detail-header {
@@ -773,9 +771,7 @@ body {
 
 .detail-body {
     margin-top: 20px;
-    flex: 1;
-    overflow-y: auto;
-    padding-right: 12px;
+    padding-right: 0;
     color: #4b5563;
     line-height: 1.7;
 }
@@ -792,6 +788,16 @@ body {
     flex-direction: column;
     gap: 14px;
     margin-top: 20px;
+}
+
+.news-links.two-column {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.news-links.two-column > li {
+    break-inside: avoid;
 }
 
 .news-links > li strong {
