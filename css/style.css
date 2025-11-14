@@ -18,14 +18,14 @@ body {
     position: relative;
 }
 
-/* 閒置首頁 */
+/* 閒置首頁 - 調整配色為更協調的藍綠色系 */
 .idle-home {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, #8B4513 0%, #2E8B57 50%, #FF8C00 100%);
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #7e8ba3 100%);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -243,9 +243,9 @@ body {
 .bottom-menu-item {
     flex: 1;
     padding: 10px;
-    background: rgba(255,255,255,0.15);
+    background: rgba(30, 60, 114, 0.85);
     backdrop-filter: blur(20px);
-    border: 3px solid rgba(255,255,255,0.3);
+    border: 3px solid rgba(126, 139, 163, 0.4);
     border-radius: 25px;
     cursor: pointer;
     transition: all 0.4s ease;
@@ -262,7 +262,7 @@ body {
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
     transition: left 0.6s ease;
 }
 
@@ -271,8 +271,9 @@ body {
 }
 
 .bottom-menu-item:hover {
-    background: rgba(255,255,255,0.25);
+    background: rgba(42, 82, 152, 0.95);
     transform: translateY(-5px);
+    border-color: rgba(126, 139, 163, 0.6);
 }
 
 .bottom-menu-icon {
@@ -352,6 +353,7 @@ body {
     transform: scale(0.9); /* 稍微縮小以適應畫面 */
 }
 
+/* 修復核心站點樣式 - 移除橫線，改善視覺效果 */
 .central-hub {
     position: absolute;
     top: 50%;
@@ -359,9 +361,9 @@ body {
     transform: translate(-50%, -50%);
     width: 180px;
     height: 180px;
-    background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(10, 30, 60, 0.9) 70%);
+    background: radial-gradient(circle, rgba(42, 82, 152, 0.4) 0%, rgba(30, 60, 114, 0.95) 70%);
     border-radius: 50%;
-    border: 2px solid rgba(255, 255, 255, 0.3);
+    border: 3px solid rgba(126, 139, 163, 0.5);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -369,37 +371,39 @@ body {
     transition: all 0.5s ease;
     z-index: 10;
     animation: pulse 4s infinite;
+    box-shadow: 0 0 30px rgba(42, 82, 152, 0.6), inset 0 0 20px rgba(126, 139, 163, 0.3);
 }
 
 @keyframes pulse {
     0% {
         transform: translate(-50%, -50%) scale(0.95);
-        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7);
+        box-shadow: 0 0 0 0 rgba(126, 139, 163, 0.7);
     }
     70% {
         transform: translate(-50%, -50%) scale(1);
-        box-shadow: 0 0 0 20px rgba(255, 255, 255, 0);
+        box-shadow: 0 0 0 20px rgba(126, 139, 163, 0);
     }
     100% {
         transform: translate(-50%, -50%) scale(0.95);
-        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+        box-shadow: 0 0 0 0 rgba(126, 139, 163, 0);
     }
 }
 
+/* 調整衛星點配色 */
 .satellite-point {
     position: absolute;
     width: 130px;
     height: 130px;
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, rgba(46, 139, 87, 0.8) 100%);
+    background: radial-gradient(circle, rgba(126, 139, 163, 0.3) 0%, rgba(42, 82, 152, 0.9) 100%);
     border-radius: 50%;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 2px solid rgba(126, 139, 163, 0.4);
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 0 15px rgba(46, 139, 87, 0.5), inset 0 0 10px rgba(255,255,255,0.1);
+    box-shadow: 0 0 20px rgba(42, 82, 152, 0.5), inset 0 0 15px rgba(126, 139, 163, 0.2);
     color: white;
     text-align: center;
     transform-origin: center center;
@@ -407,8 +411,8 @@ body {
 
 .satellite-point:hover {
     transform: scale(1.15);
-    box-shadow: 0 0 30px rgba(255, 140, 0, 0.7), inset 0 0 15px rgba(255,255,255,0.2);
-    background: radial-gradient(circle, rgba(255, 165, 0, 0.2) 0%, rgba(255, 140, 0, 0.8) 100%);
+    box-shadow: 0 0 35px rgba(126, 139, 163, 0.8), inset 0 0 20px rgba(255, 255, 255, 0.3);
+    background: radial-gradient(circle, rgba(126, 139, 163, 0.4) 0%, rgba(72, 112, 182, 0.95) 100%);
     z-index: 20;
 }
 
@@ -484,11 +488,11 @@ body {
     to { transform: rotate(-360deg); }
 }
 
-/* 連接線樣式 - 虛線效果 */
+/* 連接線樣式 - 虛線效果 - 調整配色 */
 .connection-line {
     position: absolute;
     background: none;
-    border-top: 2px dashed rgba(255, 255, 255, 0.3);
+    border-top: 2px dashed rgba(126, 139, 163, 0.3);
     opacity: 0.8;
     pointer-events: none;
     transform-origin: center;
@@ -602,7 +606,7 @@ body {
 
 .tag {
     padding: 4px 10px;
-    background: linear-gradient(45deg, #8B4513, #2E8B57);
+    background: linear-gradient(45deg, #2a5298, #7e8ba3);
     color: white;
     border-radius: 12px;
     font-size: 0.75rem;
@@ -617,7 +621,7 @@ body {
 .location-hero {
     width: 100%;
     height: 300px;
-    background: linear-gradient(135deg, #8B4513 0%, #2E8B57 100%);
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
     border-radius: 20px;
     margin-bottom: 40px;
     display: flex;
@@ -707,7 +711,7 @@ body {
 }
 
 .about-card:focus-visible {
-    outline: 3px solid #2E8B57;
+    outline: 3px solid #2a5298;
     outline-offset: 2px;
 }
 
@@ -749,7 +753,7 @@ body {
 }
 
 .detail-back {
-    background: linear-gradient(45deg, #8B4513, #2E8B57);
+    background: linear-gradient(45deg, #1e3c72, #2a5298);
     color: white;
     border: none;
     border-radius: 999px;
@@ -777,7 +781,7 @@ body {
 }
 
 .detail-body a {
-    color: #0f766e;
+    color: #2a5298;
     text-decoration: underline;
 }
 
@@ -879,7 +883,7 @@ body {
     line-height: 1.6;
 }
 
-/* 導覽控制 */
+/* 導覽控制 - 調整Home鍵配色 */
 .navigation-controls {
     position: fixed;
     bottom: 40px;
@@ -892,19 +896,20 @@ body {
 .nav-control {
     width: 70px;
     height: 70px;
-    background: linear-gradient(45deg, #8B4513, #2E8B57);
+    background: linear-gradient(135deg, #2a5298 0%, #1e3c72 100%);
     color: white;
     border: none;
     border-radius: 50%;
     cursor: pointer;
     font-size: 1.5rem;
     transition: all 0.3s ease;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+    box-shadow: 0 5px 20px rgba(30, 60, 114, 0.3), 0 2px 10px rgba(0, 0, 0, 0.2);
 }
 
 .nav-control:hover {
     transform: translateY(-5px);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    box-shadow: 0 10px 30px rgba(30, 60, 114, 0.4), 0 5px 20px rgba(0, 0, 0, 0.3);
+    background: linear-gradient(135deg, #3563ab 0%, #2a4785 100%);
 }
 
 .back-control {
@@ -912,14 +917,15 @@ body {
     top: 140px;
     left: 40px;
     background: rgba(255,255,255,0.9);
-    color: #333;
-    border: 2px solid #ddd;
+    color: #1e3c72;
+    border: 2px solid #7e8ba3;
     z-index: 100;
 }
 
 .back-control:hover {
     background: white;
-    border-color: #8B4513;
+    border-color: #2a5298;
+    color: #2a5298;
 }
 
 /* 閒置警告 */
@@ -1016,7 +1022,7 @@ body {
     display: flex;
     align-items: center;
     gap: 10px;
-    color: #8B4513;
+    color: #2a5298;
     font-weight: 500;
     margin-bottom: 15px;
     font-size: 1.1rem;
@@ -1033,7 +1039,7 @@ body {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    background: linear-gradient(45deg, #2E8B57, #20B2AA);
+    background: linear-gradient(45deg, #2a5298, #3563ab);
     color: white;
     padding: 10px 20px;
     border-radius: 25px;
@@ -1083,7 +1089,7 @@ body {
 /* ========== 產品篩選器 CSS ========== */
 
 .product-filters-container {
-    background: rgba(0,0,0,0.2);
+    background: rgba(30, 60, 114, 0.3);
     padding: 20px;
     border-radius: 15px;
     backdrop-filter: blur(10px);
@@ -1116,7 +1122,7 @@ body {
 
 .filter-btn {
     padding: 8px 18px;
-    border: 2px solid rgba(255,255,255,0.4);
+    border: 2px solid rgba(126, 139, 163, 0.5);
     background-color: transparent;
     color: rgba(255,255,255,0.8);
     border-radius: 20px;
@@ -1127,7 +1133,7 @@ body {
 }
 
 .filter-btn:hover {
-    background-color: rgba(255,255,255,0.2);
+    background-color: rgba(126, 139, 163, 0.3);
     border-color: rgba(255,255,255,0.8);
     color: white;
 }
@@ -1135,14 +1141,14 @@ body {
 .filter-btn.active {
     background-color: white;
     border-color: white;
-    color: #8B4513; /* 使用主題色 */
+    color: #2a5298;
     font-weight: 700;
 }
 
 .search-bar {
     padding: 10px 15px;
-    border: 2px solid rgba(255,255,255,0.4);
-    background-color: rgba(0,0,0,0.3);
+    border: 2px solid rgba(126, 139, 163, 0.5);
+    background-color: rgba(30, 60, 114, 0.3);
     color: white;
     border-radius: 20px;
     font-size: 1rem;
@@ -1153,7 +1159,7 @@ body {
 .search-bar:focus {
     outline: none;
     border-color: white;
-    background-color: rgba(0,0,0,0.5);
+    background-color: rgba(30, 60, 114, 0.5);
 }
 
 /* 響應式設計 */
@@ -1305,9 +1311,9 @@ body {
   padding: 12px 25px;
   font-size: 1rem;
   font-weight: 500;
-  background: rgba(255,255,255,0.1);
+  background: rgba(30, 60, 114, 0.85);
   backdrop-filter: blur(10px);
-  border: 2px solid rgba(255,255,255,0.3);
+  border: 2px solid rgba(126, 139, 163, 0.5);
   color: white;
   border-radius: 20px;
   cursor: pointer;
@@ -1315,13 +1321,14 @@ body {
 }
 
 .video-tag-btn:hover {
-  background: rgba(255,255,255,0.2);
+  background: rgba(42, 82, 152, 0.95);
   transform: translateY(-3px);
+  border-color: rgba(126, 139, 163, 0.7);
 }
 
 .video-tag-btn.active {
   background: white;
-  color: #2E8B57;
+  color: #2a5298;
   border-color: white;
   font-weight: 700;
 }
