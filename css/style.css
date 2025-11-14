@@ -493,10 +493,11 @@ body {
     position: absolute;
     background: none;
     border-top: 2px dashed rgba(126, 139, 163, 0.3);
-    opacity: 0.8;
+    opacity: 0;
     pointer-events: none;
     transform-origin: center;
     animation: dashRotate 30s linear infinite;
+    display: none; /* 完全隱藏連接線 */
 }
 
 @keyframes dashRotate {
