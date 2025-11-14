@@ -887,7 +887,7 @@ body {
 /* 導覽控制 - 調整Home鍵配色 */
 .navigation-controls {
     position: fixed;
-    bottom: 40px;
+    top: 40px;    /* 改為 top */
     right: 40px;
     display: flex;
     gap: 20px;
