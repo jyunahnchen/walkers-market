@@ -5,6 +5,28 @@ let idleTimer;
 let warningTimer;
 let currentLanguage = 'zh';
 
+// -------------------- 改進的地圖互動 --------------------
+function enhancedMapInteraction() {
+  const satellites = document.querySelectorAll('.satellite-point');
+  
+  satellites.forEach(point => {
+    point.addEventListener('mouseenter', () => {
+      // 暫停旋轉動畫
+      const orbit = point.closest('.map-container');
+      if (orbit) {
+        orbit.style.animationPlayState = 'paused';
+      }
+    });
+    
+    point.addEventListener('mouseleave', () => {
+      const orbit = point.closest('.map-container');
+      if (orbit) {
+        orbit.style.animationPlayState = 'running';
+      }
+    });
+  });
+}
+
 // -------------------- 語言切換 --------------------
 function switchLanguage(lang) {
   currentLanguage = lang;
@@ -513,12 +535,95 @@ document.addEventListener('DOMContentLoaded', function() {
       renderProducts();
     });
   }
+  
+  // 添加按鈕點擊回饋與漣漪效果
+  addButtonFeedback();
+  
+  // 初始化地圖互動
+  enhancedMapInteraction();
+  
+  // 改進無障礙性
+  improveAccessibility();
+  
+  // 初始化圖片懶加載
+  implementLazyLoading();
+  
   resetIdleTimer();
 });
+
+// 按鈕點擊回饋
+function addButtonFeedback() {
+  document.querySelectorAll('button, .clickable, .bottom-menu-item').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+      this.style.transform = 'scale(0.95)';
+      setTimeout(() => {
+        this.style.transform = '';
+      }, 100);
+      
+      // 添加漣漪效果
+      createRipple(e, this);
+    });
+  });
+}
+
+function createRipple(event, element) {
+  const ripple = document.createElement('span');
+  const rect = element.getBoundingClientRect();
+  const size = Math.max(rect.width, rect.height);
+  const x = event.clientX - rect.left - size / 2;
+  const y = event.clientY - rect.top - size / 2;
+  
+  ripple.style.cssText = `
+    position: absolute;
+    width: ${size}px;
+    height: ${size}px;
+    left: ${x}px;
+    top: ${y}px;
+    background: rgba(255,255,255,0.5);
+    border-radius: 50%;
+    transform: scale(0);
+    animation: ripple 0.6s ease-out;
+    pointer-events: none;
+  `;
+  
+  element.style.position = 'relative';
+  element.style.overflow = 'hidden';
+  element.appendChild(ripple);
+  
+  setTimeout(() => ripple.remove(), 600);
+}
 
 document.addEventListener('click', resetIdleTimer);
 document.addEventListener('touchstart', resetIdleTimer);
 document.getElementById('idleWarning').addEventListener('click', resetIdleTimer);
+
+// -------------------- 鍵盤導航支援 --------------------
+document.addEventListener('keydown', (e) => {
+  switch(e.key) {
+    case 'Escape':
+      goBack();
+      break;
+    case 'h':
+    case 'H':
+      if (e.ctrlKey || e.metaKey) {
+        goHome();
+        e.preventDefault();
+      }
+      break;
+  }
+});
+
+// 增加 ARIA 標籤以改進無障礙性
+function improveAccessibility() {
+  document.querySelectorAll('.bottom-menu-item').forEach((item, index) => {
+    item.setAttribute('role', 'button');
+    item.setAttribute('tabindex', '0');
+    const title = item.querySelector('.bottom-menu-title');
+    if (title) {
+      item.setAttribute('aria-label', title.textContent);
+    }
+  });
+}
 
 // -------------------- Hook：根據 contentId 初始化頁面 --------------------
 const __origShowContent = showContent;
@@ -527,6 +632,57 @@ showContent = function(contentId) {
   if (contentId === 'products') initializeProductsPage();
   if (contentId === 'services') initializeServicesPage();
 };
+
+// -------------------- 使用者行為分析 --------------------
+const analytics = {
+  track(event, data) {
+    console.log('Event:', event, data);
+    // 可整合 Google Analytics 或其他分析工具
+  },
+  
+  trackPageView(page) {
+    this.track('page_view', { page, timestamp: Date.now() });
+  },
+  
+  trackInteraction(element, action) {
+    this.track('interaction', { element, action, timestamp: Date.now() });
+  }
+};
+
+// -------------------- 資料快取策略 --------------------
+const cacheManager = {
+  cache: new Map(),
+  maxAge: 5 * 60 * 1000, // 5分鐘
+  
+  async get(key, fetcher) {
+    const cached = this.cache.get(key);
+    if (cached && Date.now() - cached.timestamp < this.maxAge) {
+      return cached.data;
+    }
+    
+    const data = await fetcher();
+    this.cache.set(key, { data, timestamp: Date.now() });
+    return data;
+  }
+};
+
+// -------------------- 圖片懶加載 --------------------
+function implementLazyLoading() {
+  const images = document.querySelectorAll('img[data-src]');
+  
+  const imageObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const img = entry.target;
+        img.src = img.dataset.src;
+        img.removeAttribute('data-src');
+        imageObserver.unobserve(img);
+      }
+    });
+  });
+  
+  images.forEach(img => imageObserver.observe(img));
+}
 
 // -------------------- 多媒體專區 --------------------
 function switchVideo(videoId, btnElement) {
