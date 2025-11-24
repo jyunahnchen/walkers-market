@@ -302,6 +302,8 @@ async function initializeProductsPage() {
 
 function renderProducts() {
   const productContainer = document.getElementById('product-list-container');
+  
+  // 篩選邏輯保持不變
   let filteredProducts = allProducts.filter(product =>
     currentFilters.location === 'all' || product.fields['所屬據點'] === currentFilters.location
   );
@@ -317,20 +319,40 @@ function renderProducts() {
       product.fields['Tags'] && product.fields['Tags'].includes(currentFilters.tag)
     );
   }
+
+  // 渲染邏輯
   productContainer.innerHTML = '';
   if (filteredProducts.length > 0) {
     filteredProducts.forEach(product => {
       const fields = product.fields;
       const productCard = document.createElement('div');
       productCard.className = 'product-card';
+      
       const imageUrl = fields['產品照片'] ? fields['產品照片'][0].thumbnails.large.url : '/images/logo.png';
-      const purchaseLink = fields['導購連結'] || '#';
+      
+      // 構建傳遞給 Modal 的資料物件
+      const modalData = {
+          title: fields['產品名稱'] || '未命名產品',
+          subtitle: fields['所屬據點'],
+          img: imageUrl,
+          description: fields['產品說明'],
+          tags: fields['Tags'] || [],
+          price: fields['價格'] ? `NT$ ${fields['價格']}` : '', // 假設 Airtable 有價格欄位
+          link: fields['導購連結'],
+          linkText: '前往購買'
+      };
+
+      // 點擊卡片觸發 Modal
+      productCard.onclick = () => showUniversalModal(modalData);
+
       productCard.innerHTML = `
         <div class="product-image" style="background-image: url('${imageUrl}')"></div>
         <div class="product-info">
           <div class="product-title">${fields['產品名稱'] || '未命名產品'}</div>
           <div class="product-description">${fields['產品說明'] || '暫無說明'}</div>
-          <a href="${purchaseLink}" target="_blank" class="event-meet-link" style="background: #fc913a;">前往購買</a>
+          <div class="product-tags" style="margin-top:auto;">
+             ${(fields['Tags']||[]).slice(0,3).map(t=>`<span class="tag">${t}</span>`).join('')}
+          </div>
         </div>`;
       productContainer.appendChild(productCard);
     });
@@ -463,29 +485,63 @@ function buildServiceCard(item) {
   const f = item.data.fields;
   const card = document.createElement('div');
   card.className = 'product-card';
+  
   const title = item.type==='venue' ? (f['場地名稱']||'未命名場地') : (f['導覽名稱']||'未命名導覽');
   const subtitle = f['所屬據點'] || '';
   const photo = f['照片'] && f['照片'][0] && f['照片'][0].thumbnails && f['照片'][0].thumbnails.large && f['照片'][0].thumbnails.large.url;
   const img = photo || '/images/logo.png';
   const intro = f['簡介'] || '';
-  const price = (typeof f['參考價格']!=='undefined' && f['參考價格']!==null) ? `NT$${Number(f['參考價格']).toLocaleString()}` : '';
+  const price = (typeof f['參考價格']!=='undefined' && f['參考價格']!==null) ? `參考價 NT$${Number(f['參考價格']).toLocaleString()}` : '';
   const tags = f['Tags'] || [];
   const link = f['導向連結'] || f['Google Map 連結'] || '';
+  
   const extraA = item.type==='venue' ? (f['可容納人數']?`可容納 ${f['可容納人數']} 人`:'') : (f['導覽時長（小時）']?`時長 ${f['導覽時長（小時）']} 小時`:'');
   const extraB = item.type==='venue' ? (f['定價方式']||'') : ((f['語言']||[]).join('、'));
+  
+  // 準備 Modal 資料
+  const detailedDesc = `
+${intro}
+
+${item.type === 'venue' ? `
+📋 **場地規格**
+• 容納人數：${f['可容納人數'] || '未詳'}
+• 設備：${(f['設備與配備'] || []).join('、') || '無'}
+• 限制：${(f['使用限制'] || []).join('、') || '無'}
+` : `
+📋 **行程資訊**
+• 行程時長：${f['導覽時長（小時）'] || 0} 小時
+• 集合地點：${f['集合地點'] || '另行通知'}
+• 成團人數：${f['成團人數下限'] || 1} 人起
+`}
+
+📞 **聯絡資訊**
+${f['聯絡資訊'] || '請洽詢培育站'}
+  `.trim();
+
+  const modalData = {
+      title: title,
+      subtitle: `${subtitle} | ${extraA}`,
+      img: img,
+      description: detailedDesc,
+      tags: tags,
+      price: price,
+      link: link,
+      linkText: item.type === 'venue' ? '查看位置/預約' : '查看詳情'
+  };
+
+  card.onclick = () => showUniversalModal(modalData);
 
   card.innerHTML = `
     <div class="product-image" style="background-image:url('${img}')"></div>
     <div class="product-info">
       <div class="product-title">${title}</div>
       <div class="product-description">
-        <div style="margin-bottom:6px; color:#999;">${subtitle}</div>
+        <div style="margin-bottom:6px; color:#2a5298; font-size:0.85rem;">${subtitle}</div>
         <div style="margin-bottom:8px;">${intro}</div>
-        <div style="font-size:.9rem; opacity:.9;">${[extraA, extraB, price].filter(Boolean).join('・')}</div>
+        <div style="font-size:.85rem; opacity:.8;">${[extraA, extraB].filter(Boolean).join('・')}</div>
       </div>
-      ${link ? `<a href="${link}" target="_blank" rel="noopener" class="event-meet-link" style="background:#2E8B57;">了解更多</a>` : ''}
       <div class="product-tags" style="margin-top:10px;">
-        ${(tags||[]).map(t=>`<span class="tag">${t}</span>`).join('')}
+        ${(tags||[]).slice(0,3).map(t=>`<span class="tag">${t}</span>`).join('')}
       </div>
     </div>`;
   return card;
@@ -540,3 +596,61 @@ function switchVideo(videoId, btnElement) {
   
   resetIdleTimer(); // 點擊按鈕時重設計時器
 }
+
+// -------------------- 萬用詳細視窗邏輯 --------------------
+
+// 開啟視窗函式
+function showUniversalModal(data) {
+    const modal = document.getElementById('universalModal');
+    const modalBody = document.getElementById('universalModalBody');
+    
+    // 根據傳入的 data 生成 HTML
+    // data 結構範例: { title, subtitle, img, description, tags, price, link, linkText }
+    
+    const tagsHTML = (data.tags || []).map(tag => `<span class="modal-tag">#${tag}</span>`).join('');
+    
+    const contentHTML = `
+        <div class="modal-detail-layout">
+            <div class="modal-image-wrapper">
+                <img src="${data.img}" alt="${data.title}" class="modal-detail-img">
+            </div>
+            <div class="modal-text-wrapper">
+                <div class="modal-tags">${tagsHTML}</div>
+                <h2 class="modal-title">${data.title}</h2>
+                ${data.subtitle ? `<div class="modal-subtitle">${data.subtitle}</div>` : ''}
+                
+                <div class="modal-description">${data.description || '暫無詳細說明'}</div>
+                
+                <div class="modal-footer">
+                    ${data.price ? `<div class="modal-price">${data.price}</div>` : '<div></div>'}
+                    ${data.link ? 
+                        `<a href="${data.link}" target="_blank" class="modal-action-btn">
+                           ${data.linkText || '前往查看'} →
+                         </a>` : 
+                        ''
+                    }
+                </div>
+            </div>
+        </div>
+    `;
+
+    modalBody.innerHTML = contentHTML;
+    modal.classList.add('show');
+    document.body.style.overflow = 'hidden'; // 防止背景滾動
+    resetIdleTimer();
+}
+
+// 關閉視窗函式
+function closeUniversalModal(event) {
+    if (!event || event.target.id === 'universalModal' || event.target.classList.contains('modal-close')) {
+        const modal = document.getElementById('universalModal');
+        modal.classList.remove('show');
+        document.body.style.overflow = '';
+    }
+    resetIdleTimer();
+}
+
+// 綁定 ESC 鍵關閉
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') closeUniversalModal();
+});
