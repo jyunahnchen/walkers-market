@@ -345,7 +345,7 @@ body {
     position: relative;
     flex-grow: 1; /* 讓地圖填滿剩餘空間 */
     /* 新增這行：將地圖區域向上移動，數字可根據實際效果調整 */
-    margin-top: -80px; /* 向上移動 80 像素，以騰出更多上方空間 */
+    margin-top: -120px; /* 向上移動 80 像素，以騰出更多上方空間 */
 }
 
 .map-container {
